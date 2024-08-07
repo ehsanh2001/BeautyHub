@@ -1,6 +1,9 @@
 const { User, Thought } = require('../models');
 const { signToken, AuthenticationError } = require('../utils/auth');
 
+//Import Image model
+const Image = require('../models/Image')
+
 const resolvers = {
   Query: {
     users: async () => {
@@ -25,6 +28,30 @@ const resolvers = {
   },
 
   Mutation: {
+    //Image Mutation
+    uploadImage: async (parent, { file, businessId }) => {
+      const { createStream, filename, mimetype } = await file;
+      const stream = createStream();
+
+      const imgBuffer = [];
+      for await (const chunk of stream) {
+        imgBuffer.push(chunk)
+      };
+
+      const buffer = Buffer.concat(imgBuffer)
+
+      const newImg = new Image({
+        businessId,
+        filename,
+        mimetype,
+        buffer
+      })
+
+      await newImg.save()
+    },
+
+
+
     addUser: async (parent, { username, email, password }) => {
       const user = await User.create({ username, email, password });
       const token = signToken(user);
