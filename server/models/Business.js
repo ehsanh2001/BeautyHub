@@ -5,11 +5,11 @@ const businessSchema = new Schema({
     type: String,
     required: true,
   },
-  image: {
+  imageFileName: {
     type: String,
   },
   // Define the type of business (e.g. "Hair Salon", "Nail Salon", "Spa")
-  type: {
+  businessType: {
     type: String,
     required: true,
   },
@@ -42,18 +42,11 @@ const businessSchema = new Schema({
   staff: [
     {
       name: { String, required: true },
-      image: String,
+      imageFileName: String,
       booking: [
         {
-          date: Date,
-          customer: {
-            type: Schema.Types.ObjectId,
-            ref: "Customer",
-          },
-          service: {
-            type: String,
-            required: true,
-          },
+          type: Schema.Types.ObjectId,
+          ref: "Booking",
         },
       ],
     },
@@ -61,7 +54,7 @@ const businessSchema = new Schema({
   // Define the opening hours of the business
   // The day is a string representing the day of the week (e.g. "Monday")
   // hours is an array of strings representing one hour slot (e.g. ["09:00"] means 9:00-10:00)])
-  timeSlots: [
+  openingHours: [
     {
       day: String,
       hours: [String],

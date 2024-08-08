@@ -9,22 +9,10 @@ const customerSchema = new Schema({
     type: String,
     required: true,
   },
-  booking: [
+  bookings: [
     {
-      date: Date,
-      time: String,
-      business: {
-        type: Schema.Types.ObjectId,
-        ref: "Business",
-      },
-      staffName: {
-        type: String,
-        required: true,
-      },
-      service: {
-        type: String,
-        required: true,
-      },
+      type: Schema.Types.ObjectId,
+      ref: "Booking",
     },
   ],
 });
