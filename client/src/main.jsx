@@ -8,6 +8,7 @@ import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import Error from "./pages/Error";
 import BusinessDetails from "./pages/BusinessDetails";
+import SearchResult from "./pages/SearchResult";
 
 const router = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
       {
         path: "/business_details/:id",
         element: <BusinessDetails />,
+      },
+      {
+        path: "/search/:type",
+        element: <SearchResult />,
       },
     ],
   },
