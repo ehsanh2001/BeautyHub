@@ -16,12 +16,14 @@ const businessSchema = new Schema({
   },
   services: [
     {
-      serviceName: String,
-      required: true,
-    },
-    {
-      price: Number,
-      required: true,
+      serviceName: {
+        type: String,
+        required: true,
+      },
+      price: {
+        type: Number,
+        required: true,
+      },
     },
   ],
   address: {
@@ -41,7 +43,10 @@ const businessSchema = new Schema({
   },
   staff: [
     {
-      name: { type: String, required: true },
+      name: {
+        type: String,
+        required: true,
+      },
       imageFileName: String,
       booking: [
         {

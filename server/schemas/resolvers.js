@@ -2,19 +2,23 @@ const { signToken, AuthenticationError } = require("../utils/auth");
 
 const { ApolloError } = require("apollo-server-express");
 const mongoose = require("mongoose");
-const Business = require("./models/Business"); // Replace with the actual path
-const Customer = require("./models/Customer"); // Replace with the actual path
-const Booking = require("./models/Booking"); // Replace with the actual path
-const TypeAndServices = require("./models/TypeAndServices"); // Replace with the actual path
-const User = require("./models/User"); // Replace with the actual path
+const {
+  Business,
+  Customer,
+  Booking,
+  TypeAndServices,
+  User,
+} = require("../models");
 
 const resolvers = {
   Query: {
-    async image(_, { filename }) {
-      // Logic to fetch the image by filename
-      // Assuming you have a method to fetch image URL
-      return { url: `https://your-cdn.com/images/${filename}` };
-    },
+    // TODO: Implement the image resolver
+
+    // async image(_, { filename }) {
+    //   // Logic to fetch the image by filename
+    //   // Assuming you have a method to fetch image URL
+    //   return { url: `https://your-cdn.com/images/${filename}` };
+    // },
 
     async businesses() {
       return await Business.find();

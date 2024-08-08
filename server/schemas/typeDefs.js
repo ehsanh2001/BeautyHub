@@ -56,6 +56,12 @@ const typeDefs = gql`
     bookings: [Booking!]!
   }
 
+  # Input type definitions for Staff
+  input StaffInput {
+    name: String!
+    imageFileName: String
+  }
+
   # Type definitions for OpeningHour
   type OpeningHour {
     day: String!
