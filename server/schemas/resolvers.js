@@ -12,13 +12,16 @@ const {
 
 const resolvers = {
   Query: {
-    // TODO: Implement the image resolver
+    async image(_, { filename }) {
+      // Assuming you have a base URL for your CDN or image storage
+      const baseUrl = 'https://your-cdn.com/images';
 
-    // async image(_, { filename }) {
-    //   // Logic to fetch the image by filename
-    //   // Assuming you have a method to fetch image URL
-    //   return { url: `https://your-cdn.com/images/${filename}` };
-    // },
+      // You might also include logic to check if the image exists or handle errors
+      const url = `${baseUrl}/${filename}`;
+
+      // Return the URL in a format expected by your schema
+      return { url };
+    },
 
     async businesses() {
       return await Business.find();
@@ -36,6 +39,10 @@ const resolvers = {
       return await Customer.findById(id);
     },
   },
+
+
+module.exports = resolvers;
+
 
   Mutation: {
     async addCustomer(_, { name, phone }) {
