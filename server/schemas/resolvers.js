@@ -1,144 +1,167 @@
-const { User, Thought } = require('../models');
-const { signToken, AuthenticationError } = require('../utils/auth');
+const { signToken, AuthenticationError } = require("../utils/auth");
 
-//Import Image model
-const Image = require('../models/Image')
+const { ApolloError } = require("apollo-server-express");
+const mongoose = require("mongoose");
+const Business = require("./models/Business"); // Replace with the actual path
+const Customer = require("./models/Customer"); // Replace with the actual path
+const Booking = require("./models/Booking"); // Replace with the actual path
+const TypeAndServices = require("./models/TypeAndServices"); // Replace with the actual path
+const User = require("./models/User"); // Replace with the actual path
 
 const resolvers = {
   Query: {
-    users: async () => {
-      return User.find().populate('thoughts');
+    async image(_, { filename }) {
+      // Logic to fetch the image by filename
+      // Assuming you have a method to fetch image URL
+      return { url: `https://your-cdn.com/images/${filename}` };
     },
-    user: async (parent, { username }) => {
-      return User.findOne({ username }).populate('thoughts');
+
+    async businesses() {
+      return await Business.find();
     },
-    thoughts: async (parent, { username }) => {
-      const params = username ? { username } : {};
-      return Thought.find(params).sort({ createdAt: -1 });
+
+    async businessesByType(_, { businessType }) {
+      return await Business.find({ businessType });
     },
-    thought: async (parent, { thoughtId }) => {
-      return Thought.findOne({ _id: thoughtId });
+
+    async business(_, { id }) {
+      return await Business.findById(id);
     },
-    me: async (parent, args, context) => {
-      if (context.user) {
-        return User.findOne({ _id: context.user._id }).populate('thoughts');
-      }
-      throw AuthenticationError;
+
+    async customer(_, { id }) {
+      return await Customer.findById(id);
     },
   },
 
   Mutation: {
-    //Image Mutation
-    uploadImage: async (parent, { file, businessId }) => {
-      const { createStream, filename, mimetype } = await file;
-      const stream = createStream();
-
-      const imgBuffer = [];
-      for await (const chunk of stream) {
-        imgBuffer.push(chunk)
-      };
-
-      const buffer = Buffer.concat(imgBuffer)
-
-      const newImg = new Image({
-        businessId,
-        filename,
-        mimetype,
-        buffer
-      })
-
-      await newImg.save()
+    async addCustomer(_, { name, phone }) {
+      const customer = new Customer({ name, phone });
+      return await customer.save();
     },
 
-
-
-    addUser: async (parent, { username, email, password }) => {
-      const user = await User.create({ username, email, password });
-      const token = signToken(user);
-      return { token, user };
+    async addBooking(_, { date, customer, business, staffName, service }) {
+      const booking = new Booking({
+        date,
+        customer,
+        business,
+        staffName,
+        service,
+      });
+      return await booking.save();
     },
-    login: async (parent, { email, password }) => {
-      const user = await User.findOne({ email });
 
+    async deleteBooking(_, { id }) {
+      const booking = await Booking.findByIdAndDelete(id);
+      if (!booking) {
+        throw new ApolloError("Booking not found", "NOT_FOUND");
+      }
+      return booking;
+    },
+
+    async addBusiness(
+      _,
+      {
+        businessName,
+        businessType,
+        services,
+        address,
+        phone,
+        location,
+        staff,
+        openingHours,
+      }
+    ) {
+      const typeAndServices = await TypeAndServices.findOne({ businessType });
+      const business = new Business({
+        businessName,
+        businessType,
+        services: typeAndServices ? typeAndServices.services : services,
+        address,
+        phone,
+        location,
+        staff,
+        openingHours,
+      });
+      return await business.save();
+    },
+
+    async addStaff(_, { businessName, name, imageFileName }) {
+      const business = await Business.findOne({ businessName });
+      if (!business) {
+        throw new ApolloError("Business not found", "NOT_FOUND");
+      }
+      business.staff.push({ name, imageFileName });
+      return await business.save();
+    },
+
+    async deleteStaff(_, { businessName, staffName }) {
+      const business = await Business.findOne({ businessName });
+      if (!business) {
+        throw new ApolloError("Business not found", "NOT_FOUND");
+      }
+      business.staff = business.staff.filter(
+        (staff) => staff.name !== staffName
+      );
+      return await business.save();
+    },
+
+    async addUser(_, { username, password, role }) {
+      const user = new User({ username, password, role });
+      const token = "generated-token"; // Generate a real token with your auth logic
+      return { token, user: await user.save() };
+    },
+
+    async login(_, { username, password }) {
+      const user = await User.findOne({ username, password });
       if (!user) {
-        throw AuthenticationError;
+        throw new ApolloError("Invalid credentials", "INVALID_CREDENTIALS");
       }
-
-      const correctPw = await user.isCorrectPassword(password);
-
-      if (!correctPw) {
-        throw AuthenticationError;
-      }
-
-      const token = signToken(user);
-
+      const token = "generated-token"; // Generate a real token with your auth logic
       return { token, user };
     },
-    addThought: async (parent, { thoughtText }, context) => {
-      if (context.user) {
-        const thought = await Thought.create({
-          thoughtText,
-          thoughtAuthor: context.user.username,
-        });
+  },
 
-        await User.findOneAndUpdate(
-          { _id: context.user._id },
-          { $addToSet: { thoughts: thought._id } }
-        );
-
-        return thought;
-      }
-      throw AuthenticationError;
+  Business: {
+    async services(parent) {
+      // Logic to fetch services based on the business
+      return parent.services;
     },
-    addComment: async (parent, { thoughtId, commentText }, context) => {
-      if (context.user) {
-        return Thought.findOneAndUpdate(
-          { _id: thoughtId },
-          {
-            $addToSet: {
-              comments: { commentText, commentAuthor: context.user.username },
-            },
-          },
-          {
-            new: true,
-            runValidators: true,
-          }
-        );
-      }
-      throw AuthenticationError;
+    async staff(parent) {
+      // Logic to fetch staff based on the business
+      return parent.staff;
     },
-    removeThought: async (parent, { thoughtId }, context) => {
-      if (context.user) {
-        const thought = await Thought.findOneAndDelete({
-          _id: thoughtId,
-          thoughtAuthor: context.user.username,
-        });
-
-        await User.findOneAndUpdate(
-          { _id: context.user._id },
-          { $pull: { thoughts: thought._id } }
-        );
-
-        return thought;
-      }
-      throw AuthenticationError;
+    async openingHours(parent) {
+      // Logic to fetch opening hours based on the business
+      return parent.openingHours;
     },
-    removeComment: async (parent, { thoughtId, commentId }, context) => {
-      if (context.user) {
-        return Thought.findOneAndUpdate(
-          { _id: thoughtId },
-          {
-            $pull: {
-              comments: {
-                _id: commentId,
-                commentAuthor: context.user.username,
-              },
-            },
-          },
-          { new: true }
-        );
-      }
-      throw AuthenticationError;
+  },
+
+  Service: {
+    // Any custom resolver for Service type can go here
+  },
+
+  Customer: {
+    async bookings(parent) {
+      return await Booking.find({ customer: parent.id });
+    },
+  },
+
+  Booking: {
+    async customer(parent) {
+      return await Customer.findById(parent.customer);
+    },
+    async business(parent) {
+      return await Business.findById(parent.business);
+    },
+    async service(parent) {
+      // Assuming `service` field in booking is stored as ServiceInput
+      return parent.service;
+    },
+  },
+
+  Staff: {
+    async bookings(parent) {
+      return await Booking.find({ staffName: parent.name });
     },
   },
 };
