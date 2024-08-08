@@ -6,6 +6,10 @@ const Image = require('../models/Image')
 
 const resolvers = {
   Query: {
+    //Query Image
+    getImage: async (parent, { businessId }) => {
+      return Image.find({ businessId })
+    },
     users: async () => {
       return User.find().populate('thoughts');
     },
