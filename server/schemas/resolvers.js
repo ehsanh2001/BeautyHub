@@ -10,6 +10,10 @@ const resolvers = {
     getImage: async (parent, { businessId }) => {
       return Image.find({ businessId })
     },
+
+
+
+
     users: async () => {
       return User.find().populate('thoughts');
     },
