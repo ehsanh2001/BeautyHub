@@ -1,4 +1,6 @@
-const { Schema, model } = require("mongoose");
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
+const GridFSBucket = mongoose.mongo.GridFSBucket;
 
 const businessSchema = new Schema({
   businessName: {
@@ -8,7 +10,6 @@ const businessSchema = new Schema({
   imageFileName: {
     type: String,
   },
-  // Define the type of business (e.g. "Hair Salon", "Nail Salon", "Spa")
   businessType: {
     type: String,
     required: true,
@@ -27,7 +28,6 @@ const businessSchema = new Schema({
     type: String,
     required: true,
   },
-
   phone: {
     type: String,
     required: true,
@@ -41,7 +41,7 @@ const businessSchema = new Schema({
   },
   staff: [
     {
-      name: { String, required: true },
+      name: { type: String, required: true },
       imageFileName: String,
       booking: [
         {
@@ -51,9 +51,6 @@ const businessSchema = new Schema({
       ],
     },
   ],
-  // Define the opening hours of the business
-  // The day is a string representing the day of the week (e.g. "Monday")
-  // hours is an array of strings representing one hour slot (e.g. ["09:00"] means 9:00-10:00)])
   openingHours: [
     {
       day: String,
@@ -62,40 +59,40 @@ const businessSchema = new Schema({
   ],
 });
 
-// Method to upload an image to GridFS
-imageSchema.statics.uploadImage = function (file) {
-  const gfs = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
+// Method to upload an image to GridFS and set the filename
+businessSchema.statics.uploadImage = function (businessId, file) {
+  const gfs = new GridFSBucket(mongoose.connection.db, {
     bucketName: "images",
   });
 
   return new Promise((resolve, reject) => {
     const writeStream = gfs.openUploadStream(file.filename);
-
     file.stream
       .pipe(writeStream)
-      .on("error", (error) => reject(error))
-      .on("finish", (uploadedFile) => resolve(uploadedFile));
+      .on("error", reject)
+      .on("finish", async (uploadedFile) => {
+        try {
+          // Update business with the image file name
+          await this.findByIdAndUpdate(businessId, {
+            imageFileName: file.filename,
+          });
+          resolve(uploadedFile);
+        } catch (err) {
+          reject(err);
+        }
+      });
   });
 };
 
 // Method to retrieve an image by filename
-imageSchema.statics.findImageByFilename = function (filename) {
-  const gfs = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
+businessSchema.statics.getImageByFilename = function (filename) {
+  const gfs = new GridFSBucket(mongoose.connection.db, {
     bucketName: "images",
   });
 
   return gfs.openDownloadStreamByName(filename);
 };
 
-// Method to retrieve an image by ID (optional, useful for specific retrieval)
-imageSchema.statics.findImageById = function (id) {
-  const gfs = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
-    bucketName: "images",
-  });
+const Business = mongoose.model("Business", businessSchema);
 
-  return gfs.openDownloadStream(mongoose.Types.ObjectId(id));
-};
-
-const Image = mongoose.model("Image", imageSchema);
-
-module.exports = Image;
+module.exports = Business;
