@@ -13,13 +13,12 @@ const {
 const resolvers = {
   Query: {
     async image(_, { filename }) {
-      // Assuming you have a base URL for your CDN or image storage
+      
+      
       const baseUrl = 'https://your-cdn.com/images';
 
-      // You might also include logic to check if the image exists or handle errors
       const url = `${baseUrl}/${filename}`;
 
-      // Return the URL in a format expected by your schema
       return { url };
     },
 
@@ -40,8 +39,6 @@ const resolvers = {
     },
   },
 
-
-module.exports = resolvers;
 
 
   Mutation: {
