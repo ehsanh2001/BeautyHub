@@ -33,8 +33,8 @@ module.exports = {
 
 
 
-  signToken: function ({ email, username, _id }) {
-    const payload = { email, username, _id };
+  signToken: function ({ firstName, lastName, email, _id }) {
+    const payload = { firstName, lastName, email, _id };
     return jwt.sign({ authenticatedPerson: payload }, secret, { expiresIn: expiration });
   },
 };
