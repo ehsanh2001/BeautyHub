@@ -98,6 +98,7 @@ businessSchema.statics.getImageByFilename = function (filename) {
   return gfs.openDownloadStreamByName(filename);
 };
 
+businessSchema.index({ location: "2dsphere" });
 
 const Business = mongoose.model("Business", businessSchema);
 

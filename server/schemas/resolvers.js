@@ -96,11 +96,11 @@ const resolvers = {
         const uploadedFile = await Business.uploadImage(businessId, {
           filename,
           stream: createReadStream()
-        })
+        });
 
-        return await Business.findById(businessId)
+        return await Business.findById(businessId);
       } catch (error) {
-        console.error(error)
+        console.error(error);
       }
     },
 
