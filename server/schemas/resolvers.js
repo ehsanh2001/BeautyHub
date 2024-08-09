@@ -12,13 +12,15 @@ const {
 
 const resolvers = {
   Query: {
-    // TODO: Implement the image resolver
+    async image(_, { filename }) {
+      
+      
+      const baseUrl = 'https://your-cdn.com/images';
 
-    // async image(_, { filename }) {
-    //   // Logic to fetch the image by filename
-    //   // Assuming you have a method to fetch image URL
-    //   return { url: `https://your-cdn.com/images/${filename}` };
-    // },
+      const url = `${baseUrl}/${filename}`;
+
+      return { url };
+    },
 
     async businesses() {
       return await Business.find();
@@ -36,6 +38,8 @@ const resolvers = {
       return await Customer.findById(id);
     },
   },
+
+
 
   Mutation: {
     async addCustomer(_, { name, phone }) {
