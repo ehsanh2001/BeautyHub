@@ -108,6 +108,8 @@ const typeDefs = gql`
     customer: Customer
   }
 
+  businessNearby(lat: Float!, lng: Float!, maxDistance: Float!): Business
+
   # -----------------------------------------------
   # Mutations
   # -----------------------------------------------
