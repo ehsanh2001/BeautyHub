@@ -101,7 +101,6 @@ const resolvers = {
         return await Business.findById(businessId)
       } catch (error) {
         console.error(error)
-
       }
     },
 

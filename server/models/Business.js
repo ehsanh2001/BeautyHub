@@ -98,6 +98,7 @@ businessSchema.statics.getImageByFilename = function (filename) {
   return gfs.openDownloadStreamByName(filename);
 };
 
+
 const Business = mongoose.model("Business", businessSchema);
 
 module.exports = Business;
