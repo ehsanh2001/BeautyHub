@@ -31,6 +31,16 @@ const resolvers = {
     async business(_, { id }) {
       return await Business.findById(id);
     },
+    //Business search query
+    async businessNearby(_, { lat, lng, maxDistance }) {
+      return await Business.find({
+        location: {
+          $geoWithin: {
+            $centerSphere: [[lng, lat], maxDistance / 6378.1]
+          }
+        }
+      })
+    },
 
     async customer(_, { id }) {
       return await Customer.findById(id);
