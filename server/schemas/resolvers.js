@@ -88,6 +88,22 @@ const resolvers = {
       });
       return await business.save();
     },
+    //upload image mutation
+    async uploadImage(_, { businessId, file }) {
+      try {
+        const { createReadStream, filename, mimetype, encoding } = file;
+
+        const uploadedFile = await Business.uploadImage(businessId, {
+          filename,
+          stream: createReadStream()
+        })
+
+        return await Business.findById(businessId)
+      } catch (error) {
+        console.error(error)
+
+      }
+    },
 
     async addStaff(_, { businessName, name, imageFileName }) {
       const business = await Business.findOne({ businessName });
