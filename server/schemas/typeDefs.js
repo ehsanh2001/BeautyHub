@@ -135,6 +135,8 @@ const typeDefs = gql`
       openingHours: [OpeningHourInput!]!
     ): Business
 
+    uploadImage(businessId: ID!, file: Upload!): Business
+
     addStaff(
       businessName: String!
       name: String!
