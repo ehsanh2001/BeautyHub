@@ -108,6 +108,8 @@ const typeDefs = gql`
     customer: Customer
   }
 
+  businessNearby(lat: Float!, lng: Float!, maxDistance: Float!): Business
+
   # -----------------------------------------------
   # Mutations
   # -----------------------------------------------
@@ -134,6 +136,8 @@ const typeDefs = gql`
       staff: [StaffInput!]!
       openingHours: [OpeningHourInput!]!
     ): Business
+
+    uploadImage(businessId: ID!, file: Upload!): Business
 
     addStaff(
       businessName: String!

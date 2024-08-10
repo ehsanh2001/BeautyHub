@@ -31,6 +31,16 @@ const resolvers = {
     async business(_, { id }) {
       return await Business.findById(id);
     },
+    //Business search query
+    async businessNearby(_, { lat, lng, maxDistance }) {
+      return await Business.find({
+        location: {
+          $geoWithin: {
+            $centerSphere: [[lng, lat], maxDistance / 6378.1]
+          }
+        }
+      })
+    },
 
     async customer(_, { id }) {
       return await Customer.findById(id);
@@ -87,6 +97,21 @@ const resolvers = {
         openingHours,
       });
       return await business.save();
+    },
+    //upload image mutation
+    async uploadImage(_, { businessId, file }) {
+      try {
+        const { createReadStream, filename, mimetype, encoding } = file;
+
+        const uploadedFile = await Business.uploadImage(businessId, {
+          filename,
+          stream: createReadStream()
+        });
+
+        return await Business.findById(businessId);
+      } catch (error) {
+        console.error(error);
+      }
     },
 
     async addStaff(_, { businessName, name, imageFileName }) {
