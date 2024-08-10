@@ -1,5 +1,4 @@
 const { signToken, AuthenticationError } = require("../utils/auth");
-
 const { ApolloError } = require("apollo-server-express");
 const mongoose = require("mongoose");
 const {
@@ -21,55 +20,87 @@ const resolvers = {
     // },
 
     async businesses() {
-      return await Business.find();
+      try {
+        return await Business.find();
+      } catch (error) {
+        console.error(error)
+      }
     },
 
     async businessesByType(_, { businessType }) {
-      return await Business.find({ businessType });
+      try {
+        return await Business.find({ businessType });
+      } catch (error) {
+        console.error(error)
+      }
     },
 
     async business(_, { id }) {
-      return await Business.findById(id);
+      try {
+        return await Business.findById(id);
+      } catch (error) {
+        console.error(error)
+      }
     },
     //Business search query
     async businessNearby(_, { lat, lng, maxDistance }) {
-      return await Business.find({
-        location: {
-          $geoWithin: {
-            $centerSphere: [[lng, lat], maxDistance / 6378.1]
+      try {
+        return await Business.find({
+          location: {
+            $geoWithin: {
+              $centerSphere: [[lng, lat], maxDistance / 6378.1]
+            }
           }
-        }
-      })
+        })
+      } catch (error) {
+        console.error(error)
+      }
     },
 
     async customer(_, { id }) {
-      return await Customer.findById(id);
+      try {
+        return await Customer.findById(id);
+      } catch (error) {
+        console.error(error)
+      }
     },
   },
 
   Mutation: {
     async addCustomer(_, { name, phone }) {
-      const customer = new Customer({ name, phone });
-      return await customer.save();
+      try {
+        const customer = new Customer({ name, phone });
+        return await customer.save();
+      } catch (error) {
+        console.error(error)
+      }
     },
 
     async addBooking(_, { date, customer, business, staffName, service }) {
-      const booking = new Booking({
-        date,
-        customer,
-        business,
-        staffName,
-        service,
-      });
-      return await booking.save();
+      try {
+        const booking = new Booking({
+          date,
+          customer,
+          business,
+          staffName,
+          service,
+        });
+        return await booking.save();
+      } catch (error) {
+        console.error(error)
+      }
     },
 
     async deleteBooking(_, { id }) {
-      const booking = await Booking.findByIdAndDelete(id);
-      if (!booking) {
-        throw new ApolloError("Booking not found", "NOT_FOUND");
+      try {
+        const booking = await Booking.findByIdAndDelete(id);
+        if (!booking) {
+          throw new ApolloError("Booking not found", "NOT_FOUND");
+        }
+        return booking;
+      } catch (error) {
+        console.error(error)
       }
-      return booking;
     },
 
     async addBusiness(
@@ -115,38 +146,54 @@ const resolvers = {
     },
 
     async addStaff(_, { businessName, name, imageFileName }) {
-      const business = await Business.findOne({ businessName });
-      if (!business) {
-        throw new ApolloError("Business not found", "NOT_FOUND");
+      try {
+        const business = await Business.findOne({ businessName });
+        if (!business) {
+          throw new ApolloError("Business not found", "NOT_FOUND");
+        }
+        business.staff.push({ name, imageFileName });
+        return await business.save();
+      } catch (error) {
+        console.error(error)
       }
-      business.staff.push({ name, imageFileName });
-      return await business.save();
     },
 
     async deleteStaff(_, { businessName, staffName }) {
-      const business = await Business.findOne({ businessName });
-      if (!business) {
-        throw new ApolloError("Business not found", "NOT_FOUND");
+      try {
+        const business = await Business.findOne({ businessName });
+        if (!business) {
+          throw new ApolloError("Business not found", "NOT_FOUND");
+        }
+        business.staff = business.staff.filter(
+          (staff) => staff.name !== staffName
+        );
+        return await business.save();
+      } catch (error) {
+        console.error(error)
       }
-      business.staff = business.staff.filter(
-        (staff) => staff.name !== staffName
-      );
-      return await business.save();
     },
 
     async addUser(_, { username, password, role }) {
-      const user = new User({ username, password, role });
-      const token = "generated-token"; // Generate a real token with your auth logic
-      return { token, user: await user.save() };
+      try {
+        const user = new User({ username, password, role });
+        const token = "generated-token"; // Generate a real token with your auth logic
+        return { token, user: await user.save() };
+      } catch (error) {
+        console.error(error)
+      }
     },
 
     async login(_, { username, password }) {
-      const user = await User.findOne({ username, password });
-      if (!user) {
-        throw new ApolloError("Invalid credentials", "INVALID_CREDENTIALS");
+      try {
+        const user = await User.findOne({ username, password });
+        if (!user) {
+          throw new ApolloError("Invalid credentials", "INVALID_CREDENTIALS");
+        }
+        const token = "generated-token"; // Generate a real token with your auth logic
+        return { token, user };
+      } catch (error) {
+        console.error(error)
       }
-      const token = "generated-token"; // Generate a real token with your auth logic
-      return { token, user };
     },
   },
 

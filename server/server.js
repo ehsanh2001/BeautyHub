@@ -4,7 +4,7 @@ const { expressMiddleware } = require('@apollo/server/express4');
 const path = require('path');
 const { authMiddleware } = require('./utils/auth');
 //Added graphQL upload
-const { graphqlUploadExpress } = require('graphql-upload');
+// const { graphqlUploadExpress } = require('graphql-upload');
 
 const { typeDefs, resolvers } = require('./schemas');
 const db = require('./config/connection');
@@ -24,7 +24,10 @@ const startApolloServer = async () => {
   app.use(express.json());
 
   //Added graphql upload below
-  app.use('/graphql', graphqlUploadExpress(), expressMiddleware(server, {
+
+  // app.use('/graphql', graphqlUploadExpress());
+
+  app.use('/graphql', expressMiddleware(server, {
     context: authMiddleware
   }));
 

@@ -2,6 +2,8 @@ const { gql } = require("apollo-server-express");
 
 const typeDefs = gql`
   # Type definitions for Booking
+  scalar Upload
+
   type Booking {
     id: ID!
     date: String! # GraphQL doesn't have a Date type by default
@@ -85,6 +87,7 @@ const typeDefs = gql`
   type Image {
     url: String!
   }
+
   # Type definitions for Auth
   type User {
     id: ID!
@@ -97,6 +100,7 @@ const typeDefs = gql`
     token: ID!
     user: User
   }
+
   # -----------------------------------------------
   # Queries
   # -----------------------------------------------
@@ -105,15 +109,13 @@ const typeDefs = gql`
     businesses: [Business]
     businessesByType(businessType: String!): [Business]
     business(id: ID!): Business
-    customer: Customer
+    customer(id: ID!): Customer
+    businessNearby(lat: Float!, lng: Float!, maxDistance: Float!): [Business]
   }
-
-  businessNearby(lat: Float!, lng: Float!, maxDistance: Float!): Business
 
   # -----------------------------------------------
   # Mutations
   # -----------------------------------------------
-
   type Mutation {
     addCustomer(name: String!, phone: String!): Customer
     addBooking(
@@ -124,7 +126,7 @@ const typeDefs = gql`
       service: ServiceInput!
     ): Booking
 
-    deleteBooking(id: ID!): Customer
+    deleteBooking(id: ID!): Booking
 
     addBusiness(
       businessName: String!
