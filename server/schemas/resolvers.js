@@ -1,5 +1,4 @@
 const { signToken, AuthenticationError } = require("../utils/auth");
-
 const { ApolloError } = require("apollo-server-express");
 const mongoose = require("mongoose");
 const {
