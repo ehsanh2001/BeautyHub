@@ -1,1 +1,25 @@
 import { gql } from "@apollo/client";
+
+export const ADD_BUSINESS = gql`
+  mutation Mutation(
+    $businessName: String!
+    $businessType: String!
+    $services: [ServiceInput!]!
+    $address: String!
+    $phone: String!
+    $location: LocationInput!
+    $staff: [StaffInput!]!
+  ) {
+    addBusiness(
+      businessName: $businessName
+      businessType: $businessType
+      services: $services
+      address: $address
+      phone: $phone
+      location: $location
+      staff: $staff
+    ) {
+      id
+    }
+  }
+`;

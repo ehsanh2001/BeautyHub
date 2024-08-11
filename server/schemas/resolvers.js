@@ -85,6 +85,15 @@ const resolvers = {
         openingHours,
       }
     ) {
+      console.log("services", services);
+      console.log("businessType", businessType);
+      console.log("businessName", businessName);
+      console.log("address", address);
+      console.log("phone", phone);
+      console.log("location", location);
+      console.log("staff", staff);
+      console.log("openingHours", openingHours);
+      return { id: "1234" };
       // const typeAndServices = await TypeAndServices.findOne({ businessType });
       const business = new Business({
         businessName,

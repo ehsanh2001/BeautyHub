@@ -1,15 +1,16 @@
-import React, { useState, useCallback, createContext } from "react";
+import React, { useState, useCallback } from "react";
 import { Form, Row, Col, Button } from "react-bootstrap";
 import GoogleMapModal from "./GoogleMapModal";
 import SelectServices from "./SelectServices";
 import StaffList from "./StaffList";
 import formDataInit from "./formDataInit.js";
+import { ADD_BUSINESS } from "../../utils/mutations.js";
+import { useMutation } from "@apollo/client";
 
 const BusinessDashboard = () => {
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState(formDataInit);
-
-  const FormDataCtx = createContext();
+  const [addBusiness] = useMutation(ADD_BUSINESS);
 
   const handleOpenModal = useCallback(() => setShowModal(true), []);
   const handleCloseModal = useCallback(() => setShowModal(false), []);
@@ -34,9 +35,25 @@ const BusinessDashboard = () => {
   }, []);
 
   const handleSubmit = useCallback(
-    (e) => {
+    async (e) => {
       e.preventDefault();
       console.log(formData);
+      const result = await addBusiness({
+        variables: {
+          businessName: formData.businessName,
+          businessType: formData.businessType,
+          services: formData.services,
+          address: formData.address,
+          phone: formData.phone,
+          location: formData.location,
+          staff: formData.staff,
+        },
+      });
+      if (!result.errors) {
+        alert("Business added successfully");
+      } else {
+        alert("Error adding business");
+      }
     },
     [formData]
   );
