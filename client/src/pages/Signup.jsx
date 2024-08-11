@@ -5,7 +5,6 @@ import Auth from "../utils/auth";
 const Signup = () => {
   return (
     <main className="flex-row justify-center mb-4">
-      <h1>Signup page</h1>
       <Header />
       <SingupForm />
     </main>

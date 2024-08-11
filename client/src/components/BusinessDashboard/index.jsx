@@ -38,23 +38,24 @@ const BusinessDashboard = () => {
   const handleSubmit = useCallback(
     async (e) => {
       e.preventDefault();
-      console.log(formData);
-      const result = await addBusiness({
-        variables: {
-          businessName: formData.businessName,
-          businessType: formData.businessType,
-          services: formData.services,
-          address: formData.address,
-          phone: formData.phone,
-          location: formData.location,
-          staff: formData.staff,
-          openingHours: formData.openingHours,
-        },
-      });
+      try {
+        const result = await addBusiness({
+          variables: {
+            businessName: formData.businessName,
+            businessType: formData.businessType,
+            services: formData.services,
+            address: formData.address,
+            phone: formData.phone,
+            location: formData.location,
+            staff: formData.staff,
+            openingHours: formData.openingHours,
+          },
+        });
+      } catch (error) {
+        alert("Error adding business data");
+      }
       if (!result.errors) {
         alert("Business added successfully");
-      } else {
-        alert("Error adding business");
       }
     },
     [formData]

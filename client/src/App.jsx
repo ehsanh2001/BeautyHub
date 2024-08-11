@@ -6,6 +6,7 @@ import {
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { Outlet } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 import Footer from "./components/Footer";
 
@@ -37,7 +38,7 @@ function App() {
   return (
     <ApolloProvider client={client}>
       <div className="flex-column justify-flex-start min-100-vh">
-        <div className="container">
+        <div className="container-fluid">
           <Outlet />
         </div>
         <Footer />
