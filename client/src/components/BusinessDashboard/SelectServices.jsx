@@ -10,10 +10,9 @@ import {
   ListGroup,
 } from "react-bootstrap";
 
-const SelectServices = ({ services }) => {
+const SelectServices = ({ services, formData, setFormData }) => {
   const [service, setService] = useState("");
   const [price, setPrice] = useState(0);
-  const [selectedServices, setSelectedServices] = useState([]);
 
   const handleSelect = (eventKey) => {
     setService(eventKey);
@@ -28,24 +27,33 @@ const SelectServices = ({ services }) => {
   };
 
   const handleAdd = () => {
-    const found = selectedServices.find(
-      (selServ) => selServ.service === service
+    const found = formData.services.find(
+      (selServ) => selServ.serviceName === service
     );
     if (found || !service || !price) {
       return;
     }
-    setSelectedServices([
-      ...selectedServices,
-      { service: service, price: Number(price) },
-    ]);
+
+    setFormData((prevData) => ({
+      ...prevData,
+      services: [
+        ...prevData.services,
+        { serviceName: service, price: Number(price) },
+      ],
+    }));
     setService("");
     setPrice("");
   };
 
   const handleRemove = (index) => {
-    const newServices = [...selectedServices];
-    newServices.splice(index, 1);
-    setSelectedServices(newServices);
+    setFormData((prevData) => {
+      const newServices = [...prevData.services];
+      newServices.splice(index, 1);
+      return {
+        ...prevData,
+        services: newServices,
+      };
+    });
   };
 
   return (
@@ -91,15 +99,16 @@ const SelectServices = ({ services }) => {
           </Button>
         </Col>
       </Row>
+      {/* Selected Services */}
       <Row>
         <Col>
           <ListGroup className="mt-1">
-            {selectedServices.map((service, index) => (
+            {formData.services.map((service, index) => (
               <ListGroup.Item
                 className="d-flex justify-content-between align-items-center"
                 key={index}
               >
-                {service.service} ${service.price}
+                {service.serviceName} ${service.price}
                 <Button
                   variant="danger"
                   size="sm"

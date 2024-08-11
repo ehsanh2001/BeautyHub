@@ -1,22 +1,46 @@
-import React from "react";
-import { useState } from "react";
-import { Form, Row, Col, Button, Dropdown } from "react-bootstrap";
-import SelectServices from "./SelectServices";
+import React, { useState, useCallback, createContext } from "react";
+import { Form, Row, Col, Button } from "react-bootstrap";
 import GoogleMapModal from "./GoogleMapModal";
+import SelectServices from "./SelectServices";
 import StaffList from "./StaffList";
+import formDataInit from "./formDataInit.js";
 
 const BusinessDashboard = () => {
   const [showModal, setShowModal] = useState(false);
-  const [selectedLocation, setSelectedLocation] = useState(null);
+  const [formData, setFormData] = useState(formDataInit);
 
-  const handleOpenModal = () => setShowModal(true);
-  const handleCloseModal = () => setShowModal(false);
+  const FormDataCtx = createContext();
 
-  const handleSetLocation = (location) => {
-    setSelectedLocation(location);
-  };
+  const handleOpenModal = useCallback(() => setShowModal(true), []);
+  const handleCloseModal = useCallback(() => setShowModal(false), []);
 
-  const businessServices = ["Haircut", "Shave", "Manicure", "Pedicure"];
+  const handleSetLocation = useCallback((location) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      address: location.address,
+      location: {
+        type: "Point",
+        coordinates: [location.lng, location.lat],
+      },
+    }));
+  }, []);
+
+  const handleFormDataChange = useCallback((e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  }, []);
+
+  const handleSubmit = useCallback(
+    (e) => {
+      e.preventDefault();
+      console.log(formData);
+    },
+    [formData]
+  );
+
   const businessTypes = [
     "Barbershop",
     "Hair Salon",
@@ -25,15 +49,32 @@ const BusinessDashboard = () => {
     "Spa",
   ];
 
+  const businessServices = [
+    "Haircut",
+    "Hair Color",
+    "Hair Styling",
+    "Hair Treatment",
+    "Hair Extension",
+    "Hair Removal",
+    "Nail Care",
+    "Skin Care",
+  ];
+
   return (
-    <Form>
+    <Form onSubmit={handleSubmit}>
       {/* Business Name */}
       <Form.Group as={Row} className="mb-3" controlId="formBusinessName">
         <Form.Label column sm={2}>
           Business Name
         </Form.Label>
         <Col sm={9}>
-          <Form.Control type="text" placeholder="Name" />
+          <Form.Control
+            type="text"
+            name="businessName"
+            placeholder="Name"
+            value={formData.businessName}
+            onChange={handleFormDataChange}
+          />
         </Col>
       </Form.Group>
       {/* Business Image */}
@@ -51,10 +92,15 @@ const BusinessDashboard = () => {
           Business Phone
         </Form.Label>
         <Col sm={9}>
-          <Form.Control type="text" placeholder="Phone" />
+          <Form.Control
+            type="text"
+            placeholder="Phone"
+            name="phone"
+            value={formData.phone}
+            onChange={handleFormDataChange}
+          />
         </Col>
       </Form.Group>
-
       {/* Business Address */}
       <Form.Group as={Row} className="mb-3" controlId="formBusinessAddress">
         <Form.Label column sm={2}>
@@ -64,9 +110,9 @@ const BusinessDashboard = () => {
           <Button variant="success" onClick={handleOpenModal}>
             Select Location
           </Button>
-          {selectedLocation && (
+          {formData.address && (
             <span className="mt-4 ml-1">
-              <strong>Address:</strong> {selectedLocation.address}
+              <strong>Address:</strong> {formData.address}
             </span>
           )}
           <GoogleMapModal
@@ -82,33 +128,40 @@ const BusinessDashboard = () => {
           Business Type
         </Form.Label>
         <Col sm={9}>
-          <Form.Select aria-label="Default select example">
+          <Form.Select
+            aria-label="Business Type"
+            name="businessType"
+            value={formData.businessType}
+            onChange={handleFormDataChange}
+          >
             {businessTypes.map((type, index) => (
               <option key={index}>{type}</option>
             ))}
           </Form.Select>
         </Col>
       </Form.Group>
-
       {/* Business Services */}
       <Form.Group as={Row} className="mb-3" controlId="formBusinessServices">
         <Form.Label column sm={2}>
           Business Services
         </Form.Label>
         <Col sm={9}>
-          <SelectServices services={businessServices} />
+          <SelectServices
+            services={businessServices}
+            formData={formData}
+            setFormData={setFormData}
+          />
         </Col>
       </Form.Group>
-
       {/* Staff List */}
       <Form.Group as={Row} className="mb-3" controlId="formStaffList">
         <Form.Label column sm={2}>
           Staff List
         </Form.Label>
         <Col sm={9}>
-          <StaffList />
+          <StaffList formData={formData} setFormData={setFormData} />
         </Col>
-      </Form.Group>
+      </Form.Group>{" "}
       {/* Submit Button */}
       <Button size="lg" variant="primary" type="submit">
         Submit

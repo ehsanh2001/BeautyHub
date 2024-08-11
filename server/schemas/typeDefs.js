@@ -60,7 +60,7 @@ const typeDefs = gql`
   # Input type definitions for Staff
   input StaffInput {
     name: String!
-    imageFileName: String
+    password: String!
   }
 
   # Type definitions for OpeningHour

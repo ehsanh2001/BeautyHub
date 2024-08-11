@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import { Form, Button, Container, Row, Col, ListGroup } from "react-bootstrap";
 
-const StaffList = ({}) => {
+const StaffList = ({ formData, setFormData }) => {
   const [staff, setStaff] = useState("");
   const [staffPassword, setStaffPassword] = useState("");
   const [retypeStaffPassword, setRetypeStaffPassword] = useState("");
-  const [selectedStaff, setSelectedStaff] = useState([]);
   const [validatedPassword, setValidatedPassword] = useState(true);
 
   const handleSelect = (eventKey) => {
@@ -26,7 +25,7 @@ const StaffList = ({}) => {
   };
 
   const handleAdd = () => {
-    const found = selectedStaff.find((selStaff) => selStaff.staff === staff);
+    const found = formData.staff.find((selStaff) => selStaff.name === staff);
     if (found || !staff) {
       return;
     }
@@ -36,24 +35,32 @@ const StaffList = ({}) => {
 
       return;
     }
-    setSelectedStaff([
-      ...selectedStaff,
-      { staff: staff, staffPassword: staffPassword },
-    ]);
+
+    setFormData((prevData) => ({
+      ...prevData,
+      staff: [...prevData.staff, { name: staff, password: staffPassword }],
+    }));
+
     setStaff("");
     setStaffPassword("");
     setRetypeStaffPassword("");
   };
 
   const handleRemove = (index) => {
-    const newStaff = [...selectedStaff];
-    newStaff.splice(index, 1);
-    setSelectedStaff(newStaff);
+    setFormData((prevData) => {
+      const newStaff = [...prevData.staff];
+      newStaff.splice(index, 1);
+      return {
+        ...prevData,
+        staff: newStaff,
+      };
+    });
   };
 
   return (
     <Container>
       <Row>
+        {/* Name */}
         <Col xs={3}>
           <Form.Control
             type="text"
@@ -62,6 +69,7 @@ const StaffList = ({}) => {
             onChange={handleStaffChange}
           />
         </Col>
+        {/* Password */}
         <Col xs={3}>
           <Form.Control
             type="password"
@@ -70,6 +78,7 @@ const StaffList = ({}) => {
             onChange={handleStaffPasswordChange}
           />
         </Col>
+        {/* Retype Password */}
         <Col xs={3}>
           <Form.Group controlId="formStaffRetypePassword">
             <Form.Control
@@ -84,21 +93,23 @@ const StaffList = ({}) => {
             </Form.Control.Feedback>
           </Form.Group>
         </Col>
+        {/* Add Button */}
         <Col xs={1}>
           <Button variant="success" onClick={handleAdd}>
             Add
           </Button>
         </Col>
       </Row>
+      {/* Staff List */}
       <Row>
         <Col>
           <ListGroup className="mt-2">
-            {selectedStaff.map((selStaff, index) => (
+            {formData.staff.map((selStaff, index) => (
               <ListGroup.Item
                 className="d-flex justify-content-between align-items-center"
                 key={`staff-${index}`}
               >
-                {selStaff.staff}
+                {selStaff.name}
                 <Button
                   size="sm"
                   className="mx-5"
