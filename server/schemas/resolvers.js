@@ -36,10 +36,10 @@ const resolvers = {
       return await Business.find({
         location: {
           $geoWithin: {
-            $centerSphere: [[lng, lat], maxDistance / 6378.1]
-          }
-        }
-      })
+            $centerSphere: [[lng, lat], maxDistance / 6378.1],
+          },
+        },
+      });
     },
 
     async customer(_, { id }) {
@@ -85,7 +85,7 @@ const resolvers = {
         openingHours,
       }
     ) {
-      const typeAndServices = await TypeAndServices.findOne({ businessType });
+      // const typeAndServices = await TypeAndServices.findOne({ businessType });
       const business = new Business({
         businessName,
         businessType,
@@ -105,7 +105,7 @@ const resolvers = {
 
         const uploadedFile = await Business.uploadImage(businessId, {
           filename,
-          stream: createReadStream()
+          stream: createReadStream(),
         });
 
         return await Business.findById(businessId);

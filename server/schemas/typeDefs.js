@@ -1,6 +1,7 @@
 const { gql } = require("apollo-server-express");
 
 const typeDefs = gql`
+  scalar Upload
   # Type definitions for Booking
   type Booking {
     id: ID!
@@ -106,9 +107,8 @@ const typeDefs = gql`
     businessesByType(businessType: String!): [Business]
     business(id: ID!): Business
     customer: Customer
+    businessNearby(lat: Float!, lng: Float!, maxDistance: Float!): Business
   }
-
-  businessNearby(lat: Float!, lng: Float!, maxDistance: Float!): Business
 
   # -----------------------------------------------
   # Mutations
@@ -134,7 +134,7 @@ const typeDefs = gql`
       phone: String!
       location: LocationInput!
       staff: [StaffInput!]!
-      openingHours: [OpeningHourInput!]!
+      openingHours: [OpeningHourInput]
     ): Business
 
     uploadImage(businessId: ID!, file: Upload!): Business

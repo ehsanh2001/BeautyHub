@@ -13,6 +13,9 @@ const Toolbar = () => {
       <Link className="mx-1" to="/signup">
         Signup
       </Link>
+      <Link className="mx-1" to="/dashboard">
+        Dashboard
+      </Link>
     </div>
   );
 };

@@ -9,6 +9,7 @@ import Login from "./pages/Login";
 import Error from "./pages/Error";
 import BusinessDetails from "./pages/BusinessDetails";
 import SearchResult from "./pages/SearchResult";
+import Dashboard from "./pages/Dashboard";
 
 const router = createBrowserRouter([
   {
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
       {
         path: "/search/:type",
         element: <SearchResult />,
+      },
+      {
+        path: "dashboard",
+        element: <Dashboard />,
       },
     ],
   },
