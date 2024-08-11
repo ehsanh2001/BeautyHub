@@ -56,12 +56,15 @@ const businessSchema = new Schema({
       ],
     },
   ],
-  openingHours: [
-    {
-      day: String,
-      hours: [String],
-    },
-  ],
+  openingHours: {
+    Monday: [Boolean],
+    Tuesday: [Boolean],
+    Wednesday: [Boolean],
+    Thursday: [Boolean],
+    Friday: [Boolean],
+    Saturday: [Boolean],
+    Sunday: [Boolean],
+  },
 });
 
 // Method to upload an image to GridFS and set the filename

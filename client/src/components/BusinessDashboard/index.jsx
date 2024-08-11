@@ -3,6 +3,7 @@ import { Form, Row, Col, Button } from "react-bootstrap";
 import GoogleMapModal from "./GoogleMapModal";
 import SelectServices from "./SelectServices";
 import StaffList from "./StaffList";
+import ScheduleTable from "./ScheduleTable.jsx";
 import formDataInit from "./formDataInit.js";
 import { ADD_BUSINESS } from "../../utils/mutations.js";
 import { useMutation } from "@apollo/client";
@@ -47,6 +48,7 @@ const BusinessDashboard = () => {
           phone: formData.phone,
           location: formData.location,
           staff: formData.staff,
+          openingHours: formData.openingHours,
         },
       });
       if (!result.errors) {
@@ -179,6 +181,15 @@ const BusinessDashboard = () => {
           <StaffList formData={formData} setFormData={setFormData} />
         </Col>
       </Form.Group>{" "}
+      {/* Schedule Table */}
+      <Form.Group as={Row} className="mb-3" controlId="formScheduleTable">
+        <Form.Label column sm={2}>
+          Schedule
+        </Form.Label>
+        <Col sm={9}>
+          <ScheduleTable formData={formData} setFormData={setFormData} />
+        </Col>
+      </Form.Group>
       {/* Submit Button */}
       <Button size="lg" variant="primary" type="submit">
         Submit

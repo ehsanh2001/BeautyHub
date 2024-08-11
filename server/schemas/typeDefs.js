@@ -35,7 +35,7 @@ const typeDefs = gql`
     phone: String!
     location: Location!
     staff: [Staff!]!
-    openingHours: [OpeningHour!]!
+    openingHours: OpeningHours!
   }
 
   # Type definitions for Location
@@ -63,18 +63,6 @@ const typeDefs = gql`
     password: String!
   }
 
-  # Type definitions for OpeningHour
-  type OpeningHour {
-    day: String!
-    hours: [String!]!
-  }
-
-  # Input type definitions for OpeningHour
-  input OpeningHourInput {
-    day: String!
-    hours: [String!]!
-  }
-
   # Type definitions for Customer
   type Customer {
     id: ID!
@@ -85,6 +73,27 @@ const typeDefs = gql`
 
   type Image {
     url: String!
+  }
+
+  # Input type definitions for OpeningHours
+  type OpeningHours {
+    Monday: [Boolean!]!
+    Tuesday: [Boolean!]!
+    Wednesday: [Boolean!]!
+    Thursday: [Boolean!]!
+    Friday: [Boolean!]!
+    Saturday: [Boolean!]!
+    Sunday: [Boolean!]!
+  }
+
+  input OpeningHoursInput {
+    Monday: [Boolean!]!
+    Tuesday: [Boolean!]!
+    Wednesday: [Boolean!]!
+    Thursday: [Boolean!]!
+    Friday: [Boolean!]!
+    Saturday: [Boolean!]!
+    Sunday: [Boolean!]!
   }
   # Type definitions for Auth
   type User {
@@ -131,10 +140,10 @@ const typeDefs = gql`
       businessType: String!
       services: [ServiceInput!]!
       address: String!
-      phone: String!
+      phone: String
       location: LocationInput!
       staff: [StaffInput!]!
-      openingHours: [OpeningHourInput]
+      openingHours: OpeningHoursInput!
     ): Business
 
     uploadImage(businessId: ID!, file: Upload!): Business

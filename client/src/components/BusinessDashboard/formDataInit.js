@@ -1,3 +1,26 @@
+const timeSlots = [
+  "9:00 AM",
+  "10:00 AM",
+  "11:00 AM",
+  "12:00 PM",
+  "1:00 PM",
+  "2:00 PM",
+  "3:00 PM",
+  "4:00 PM",
+  "5:00 PM",
+  "6:00 PM",
+];
+
+const initOpeningHours = {
+  Monday: new Array(timeSlots.length).fill(true),
+  Tuesday: new Array(timeSlots.length).fill(true),
+  Wednesday: new Array(timeSlots.length).fill(true),
+  Thursday: new Array(timeSlots.length).fill(true),
+  Friday: new Array(timeSlots.length).fill(true),
+  Saturday: new Array(timeSlots.length).fill(true),
+  Sunday: new Array(timeSlots.length).fill(true),
+};
+
 const formDataInit = {
   businessName: "",
   businessType: "",
@@ -27,28 +50,7 @@ const formDataInit = {
     //   password: "AnotherSecurePass456!",
     // },
   ],
-  openingHours: [
-    // {
-    //   day: "Monday",
-    //   hours: ["09:00 AM - 05:00 PM"],
-    // },
-    // {
-    //   day: "Tuesday",
-    //   hours: ["09:00 AM - 05:00 PM"],
-    // },
-    // {
-    //   day: "Wednesday",
-    //   hours: ["09:00 AM - 05:00 PM"],
-    // },
-    // {
-    //   day: "Thursday",
-    //   hours: ["09:00 AM - 05:00 PM"],
-    // },
-    // {
-    //   day: "Friday",
-    //   hours: ["09:00 AM - 05:00 PM"],
-    // },
-  ],
+  openingHours: initOpeningHours,
 };
 
 export default formDataInit;

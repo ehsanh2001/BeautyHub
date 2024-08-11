@@ -6,4 +6,4 @@ const TypeAndServices = require("./TypeAndServices");
 
 // module.exports = { Business, Booking, Customer, User };
 
-module.exports = { Booking, Customer, User, TypeAndServices };
+module.exports = { Booking, Customer, User, TypeAndServices, Business };

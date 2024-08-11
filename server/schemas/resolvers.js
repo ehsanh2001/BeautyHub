@@ -1,4 +1,4 @@
-const { signToken, AuthenticationError } = require("../utils/auth");
+// const { signToken, AuthenticationError } = require("../utils/auth");
 
 const { ApolloError } = require("apollo-server-express");
 const mongoose = require("mongoose");
@@ -85,41 +85,22 @@ const resolvers = {
         openingHours,
       }
     ) {
-      console.log("services", services);
-      console.log("businessType", businessType);
-      console.log("businessName", businessName);
-      console.log("address", address);
-      console.log("phone", phone);
-      console.log("location", location);
-      console.log("staff", staff);
-      console.log("openingHours", openingHours);
-      return { id: "1234" };
-      // const typeAndServices = await TypeAndServices.findOne({ businessType });
-      const business = new Business({
-        businessName,
-        businessType,
-        services: typeAndServices ? typeAndServices.services : services,
-        address,
-        phone,
-        location,
-        staff,
-        openingHours,
-      });
-      return await business.save();
-    },
-    //upload image mutation
-    async uploadImage(_, { businessId, file }) {
       try {
-        const { createReadStream, filename, mimetype, encoding } = file;
+        const business = {
+          businessName: businessName,
+          businessType: businessType,
+          services: services,
+          address: address,
+          phone: phone,
+          location: location,
+          staff: staff,
+          openingHours: openingHours,
+        };
 
-        const uploadedFile = await Business.uploadImage(businessId, {
-          filename,
-          stream: createReadStream(),
-        });
-
-        return await Business.findById(businessId);
+        return await Business.create(business);
       } catch (error) {
-        console.error(error);
+        console.error("Error adding business:", error);
+        throw new ApolloError("Error adding business", "ADD_BUSINESS_ERROR");
       }
     },
 
@@ -159,49 +140,49 @@ const resolvers = {
     },
   },
 
-  Business: {
-    async services(parent) {
-      // Logic to fetch services based on the business
-      return parent.services;
-    },
-    async staff(parent) {
-      // Logic to fetch staff based on the business
-      return parent.staff;
-    },
-    async openingHours(parent) {
-      // Logic to fetch opening hours based on the business
-      return parent.openingHours;
-    },
-  },
+  // Business: {
+  //   async services(parent) {
+  //     // Logic to fetch services based on the business
+  //     return parent.services;
+  //   },
+  //   async staff(parent) {
+  //     // Logic to fetch staff based on the business
+  //     return parent.staff;
+  //   },
+  //   async openingHours(parent) {
+  //     // Logic to fetch opening hours based on the business
+  //     return parent.openingHours;
+  //   },
+  // },
 
-  Service: {
-    // Any custom resolver for Service type can go here
-  },
+  // Service: {
+  //   // Any custom resolver for Service type can go here
+  // },
 
-  Customer: {
-    async bookings(parent) {
-      return await Booking.find({ customer: parent.id });
-    },
-  },
+  // Customer: {
+  //   async bookings(parent) {
+  //     return await Booking.find({ customer: parent.id });
+  //   },
+  // },
 
-  Booking: {
-    async customer(parent) {
-      return await Customer.findById(parent.customer);
-    },
-    async business(parent) {
-      return await Business.findById(parent.business);
-    },
-    async service(parent) {
-      // Assuming `service` field in booking is stored as ServiceInput
-      return parent.service;
-    },
-  },
+  // Booking: {
+  //   async customer(parent) {
+  //     return await Customer.findById(parent.customer);
+  //   },
+  //   async business(parent) {
+  //     return await Business.findById(parent.business);
+  //   },
+  //   async service(parent) {
+  //     // Assuming `service` field in booking is stored as ServiceInput
+  //     return parent.service;
+  //   },
+  // },
 
-  Staff: {
-    async bookings(parent) {
-      return await Booking.find({ staffName: parent.name });
-    },
-  },
+  // Staff: {
+  //   async bookings(parent) {
+  //     return await Booking.find({ staffName: parent.name });
+  //   },
+  // },
 };
 
 module.exports = resolvers;
