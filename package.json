@@ -15,5 +15,9 @@
   "license": "ISC",
   "devDependencies": {
     "concurrently": "^5.1.0"
+  },
+  "dependencies": {
+    "apollo-upload-client": "^18.0.1",
+    "cors": "^2.8.5"
   }
 }

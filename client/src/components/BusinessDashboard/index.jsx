@@ -16,6 +16,13 @@ const BusinessDashboard = () => {
   const handleOpenModal = useCallback(() => setShowModal(true), []);
   const handleCloseModal = useCallback(() => setShowModal(false), []);
 
+  const handleImageChange = useCallback((e) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      image: e.target.files[0],
+    }));
+  }, []);
+
   const handleSetLocation = useCallback((location) => {
     setFormData((prevData) => ({
       ...prevData,
@@ -39,23 +46,40 @@ const BusinessDashboard = () => {
     async (e) => {
       e.preventDefault();
       try {
-        const result = await addBusiness({
-          variables: {
-            businessName: formData.businessName,
-            businessType: formData.businessType,
-            services: formData.services,
-            address: formData.address,
-            phone: formData.phone,
-            location: formData.location,
-            staff: formData.staff,
-            openingHours: formData.openingHours,
-          },
-        });
+        // Upload image
+        const formDataFile = new FormData();
+        formDataFile.append("file", formData.image);
+        console.log("Start uploading file");
+        try {
+          const response = await fetch("http://localhost:3001/upload", {
+            method: "POST",
+            body: formDataFile,
+          });
+          const imageResult = await response.json();
+          const imageFileName = imageResult.file.filename;
+
+          // Add business data
+          const result = await addBusiness({
+            variables: {
+              businessName: formData.businessName,
+              businessType: formData.businessType,
+              services: formData.services,
+              address: formData.address,
+              phone: formData.phone,
+              location: formData.location,
+              staff: formData.staff,
+              openingHours: formData.openingHours,
+              imageFileName: imageFileName,
+            },
+          });
+          alert("Business data added successfully");
+        } catch (error) {
+          alert("Error uploading files:", error);
+          console.log("Error uploading files:", error);
+        }
       } catch (error) {
         alert("Error adding business data");
-      }
-      if (!result.errors) {
-        alert("Business added successfully");
+        console.error("Error adding business data:", error);
       }
     },
     [formData]
@@ -103,7 +127,11 @@ const BusinessDashboard = () => {
           Image:
         </Form.Label>
         <Col sm={9}>
-          <Form.Control type="file" placeholder="file" />
+          <Form.Control
+            type="file"
+            placeholder="file"
+            onChange={handleImageChange}
+          />
         </Col>
       </Form.Group>
       {/* Business Phone */}
@@ -154,6 +182,7 @@ const BusinessDashboard = () => {
             value={formData.businessType}
             onChange={handleFormDataChange}
           >
+            <option key={123456}>Select Business Type</option>
             {businessTypes.map((type, index) => (
               <option key={index}>{type}</option>
             ))}

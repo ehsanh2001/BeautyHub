@@ -4,6 +4,8 @@ import {
   ApolloProvider,
   createHttpLink,
 } from "@apollo/client";
+import createUploadLink from "apollo-upload-client/createUploadLink.mjs";
+
 import { setContext } from "@apollo/client/link/context";
 import { Outlet } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -11,7 +13,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Footer from "./components/Footer";
 
 // Construct our main GraphQL API endpoint
-const httpLink = createHttpLink({
+const httpLink = createUploadLink({
   uri: "/graphql",
 });
 

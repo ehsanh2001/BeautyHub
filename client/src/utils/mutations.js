@@ -6,20 +6,22 @@ export const ADD_BUSINESS = gql`
     $businessType: String!
     $services: [ServiceInput!]!
     $address: String!
-    $phone: String
     $location: LocationInput!
     $staff: [StaffInput!]!
     $openingHours: OpeningHoursInput!
+    $phone: String
+    $imageFileName: String
   ) {
     addBusiness(
       businessName: $businessName
       businessType: $businessType
       services: $services
       address: $address
-      phone: $phone
       location: $location
       staff: $staff
       openingHours: $openingHours
+      phone: $phone
+      imageFileName: $imageFileName
     ) {
       id
     }

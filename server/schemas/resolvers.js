@@ -83,6 +83,7 @@ const resolvers = {
         location,
         staff,
         openingHours,
+        imageFileName,
       }
     ) {
       try {
@@ -95,9 +96,11 @@ const resolvers = {
           location: location,
           staff: staff,
           openingHours: openingHours,
+          imageFileName: imageFileName,
         };
 
-        return await Business.create(business);
+        const result = await Business.create(business);
+        return result;
       } catch (error) {
         console.error("Error adding business:", error);
         throw new ApolloError("Error adding business", "ADD_BUSINESS_ERROR");
@@ -139,50 +142,6 @@ const resolvers = {
       return { token, user };
     },
   },
-
-  // Business: {
-  //   async services(parent) {
-  //     // Logic to fetch services based on the business
-  //     return parent.services;
-  //   },
-  //   async staff(parent) {
-  //     // Logic to fetch staff based on the business
-  //     return parent.staff;
-  //   },
-  //   async openingHours(parent) {
-  //     // Logic to fetch opening hours based on the business
-  //     return parent.openingHours;
-  //   },
-  // },
-
-  // Service: {
-  //   // Any custom resolver for Service type can go here
-  // },
-
-  // Customer: {
-  //   async bookings(parent) {
-  //     return await Booking.find({ customer: parent.id });
-  //   },
-  // },
-
-  // Booking: {
-  //   async customer(parent) {
-  //     return await Customer.findById(parent.customer);
-  //   },
-  //   async business(parent) {
-  //     return await Business.findById(parent.business);
-  //   },
-  //   async service(parent) {
-  //     // Assuming `service` field in booking is stored as ServiceInput
-  //     return parent.service;
-  //   },
-  // },
-
-  // Staff: {
-  //   async bookings(parent) {
-  //     return await Booking.find({ staffName: parent.name });
-  //   },
-  // },
 };
 
 module.exports = resolvers;

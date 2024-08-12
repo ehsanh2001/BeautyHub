@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const GridFSBucket = mongoose.mongo.GridFSBucket;
+const getGFS = require("../config/gridfs");
 
 const businessSchema = new Schema({
   businessName: {
@@ -67,38 +67,33 @@ const businessSchema = new Schema({
   },
 });
 
-// Method to upload an image to GridFS and set the filename
-businessSchema.statics.uploadImage = function (businessId, file) {
-  const gfs = new GridFSBucket(mongoose.connection.db, {
-    bucketName: "images",
-  });
+// Static method to save image file to GridFS
+businessSchema.statics.saveImage = async function (file) {
+  const gfs = getGFS();
+
+  if (!file) {
+    throw new Error("No file provided");
+  }
+
+  const { buffer, originalname } = file;
 
   return new Promise((resolve, reject) => {
-    const writeStream = gfs.openUploadStream(file.filename);
-    file.stream
-      .pipe(writeStream)
-      .on("error", reject)
-      .on("finish", async (uploadedFile) => {
-        try {
-          // Update business with the image file name
-          await this.findByIdAndUpdate(businessId, {
-            imageFileName: file.filename,
-          });
-          resolve(uploadedFile);
-        } catch (err) {
-          reject(err);
-        }
-      });
-  });
-};
+    const writestream = gfs.createWriteStream({
+      filename: originalname,
+      bucketName: "uploads",
+    });
 
-// Method to retrieve an image by filename
-businessSchema.statics.getImageByFilename = function (filename) {
-  const gfs = new GridFSBucket(mongoose.connection.db, {
-    bucketName: "images",
-  });
+    writestream.on("close", (file) => {
+      resolve(file.filename);
+    });
 
-  return gfs.openDownloadStreamByName(filename);
+    writestream.on("error", (err) => {
+      reject(err);
+    });
+
+    writestream.write(buffer);
+    writestream.end();
+  });
 };
 
 businessSchema.index({ location: "2dsphere" });
