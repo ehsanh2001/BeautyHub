@@ -76,7 +76,7 @@ const SignupForm = () => {
                       Select your role
                     </option>
                     <option value="customer">Customer</option>
-                    <option value="business">Business</option>
+                    <option value="business-owner">Business Owner</option>
                   </select>
                   <button
                     className="btn btn-block bg-dark btn-primary"
