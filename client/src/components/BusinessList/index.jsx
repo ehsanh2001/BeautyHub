@@ -1,15 +1,26 @@
 import BusinessListItem from "../BusinessListItem";
+import { GET_ALL_BUSINESSES } from "../../utils/queries";
+import { useQuery } from "@apollo/client";
+import { useEffect } from "react";
 
 const BusinessList = ({ businessType }) => {
+  const { loading, error, data, refetch } = useQuery(GET_ALL_BUSINESSES);
+
+  useEffect(() => {
+    refetch(); // Refetch the data when the component mounts
+  }, [refetch]);
+
   return (
     <div>
-      <h1>Business List Component for {businessType}</h1>
-      <BusinessListItem
-        business={{ businessName: "Business 1", businessType: "Business type" }}
-      />
-      <BusinessListItem
-        business={{ businessName: "Business 2", businessType: "Business type" }}
-      />
+      {loading ? (
+        <div>Loading...</div>
+      ) : (
+        <div>
+          {data.businesses.map((business) => (
+            <BusinessListItem key={business.id} business={business} />
+          ))}
+        </div>
+      )}
     </div>
   );
 };

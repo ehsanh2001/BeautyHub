@@ -1,6 +1,7 @@
 const { gql } = require("apollo-server-express");
 
 const typeDefs = gql`
+  scalar Upload
   # Type definitions for Booking
   type Booking {
     id: ID!
@@ -34,7 +35,7 @@ const typeDefs = gql`
     phone: String!
     location: Location!
     staff: [Staff!]!
-    openingHours: [OpeningHour!]!
+    openingHours: OpeningHours!
   }
 
   # Type definitions for Location
@@ -59,19 +60,7 @@ const typeDefs = gql`
   # Input type definitions for Staff
   input StaffInput {
     name: String!
-    imageFileName: String
-  }
-
-  # Type definitions for OpeningHour
-  type OpeningHour {
-    day: String!
-    hours: [String!]!
-  }
-
-  # Input type definitions for OpeningHour
-  input OpeningHourInput {
-    day: String!
-    hours: [String!]!
+    password: String!
   }
 
   # Type definitions for Customer
@@ -84,6 +73,27 @@ const typeDefs = gql`
 
   type Image {
     url: String!
+  }
+
+  # Input type definitions for OpeningHours
+  type OpeningHours {
+    Monday: [Boolean!]!
+    Tuesday: [Boolean!]!
+    Wednesday: [Boolean!]!
+    Thursday: [Boolean!]!
+    Friday: [Boolean!]!
+    Saturday: [Boolean!]!
+    Sunday: [Boolean!]!
+  }
+
+  input OpeningHoursInput {
+    Monday: [Boolean!]!
+    Tuesday: [Boolean!]!
+    Wednesday: [Boolean!]!
+    Thursday: [Boolean!]!
+    Friday: [Boolean!]!
+    Saturday: [Boolean!]!
+    Sunday: [Boolean!]!
   }
   # Type definitions for Auth
   type User {
@@ -106,6 +116,7 @@ const typeDefs = gql`
     businessesByType(businessType: String!): [Business]
     business(id: ID!): Business
     customer: Customer
+    businessNearby(lat: Float!, lng: Float!, maxDistance: Float!): Business
   }
 
   # -----------------------------------------------
@@ -129,11 +140,14 @@ const typeDefs = gql`
       businessType: String!
       services: [ServiceInput!]!
       address: String!
-      phone: String!
+      phone: String
       location: LocationInput!
       staff: [StaffInput!]!
-      openingHours: [OpeningHourInput!]!
+      openingHours: OpeningHoursInput!
+      imageFileName: String
     ): Business
+
+    uploadImage(file: Upload!): String
 
     addStaff(
       businessName: String!

@@ -1,4 +1,4 @@
-const { signToken, AuthenticationError } = require("../utils/auth");
+// const { signToken, AuthenticationError } = require("../utils/auth");
 
 const { ApolloError } = require("apollo-server-express");
 const mongoose = require("mongoose");
@@ -33,6 +33,16 @@ const resolvers = {
 
     async business(_, { id }) {
       return await Business.findById(id);
+    },
+    //Business search query
+    async businessNearby(_, { lat, lng, maxDistance }) {
+      return await Business.find({
+        location: {
+          $geoWithin: {
+            $centerSphere: [[lng, lat], maxDistance / 6378.1],
+          },
+        },
+      });
     },
 
     async customer(_, { id }) {
@@ -80,20 +90,28 @@ module.exports = resolvers;
         location,
         staff,
         openingHours,
+        imageFileName,
       }
     ) {
-      const typeAndServices = await TypeAndServices.findOne({ businessType });
-      const business = new Business({
-        businessName,
-        businessType,
-        services: typeAndServices ? typeAndServices.services : services,
-        address,
-        phone,
-        location,
-        staff,
-        openingHours,
-      });
-      return await business.save();
+      try {
+        const business = {
+          businessName: businessName,
+          businessType: businessType,
+          services: services,
+          address: address,
+          phone: phone,
+          location: location,
+          staff: staff,
+          openingHours: openingHours,
+          imageFileName: imageFileName,
+        };
+
+        const result = await Business.create(business);
+        return result;
+      } catch (error) {
+        console.error("Error adding business:", error);
+        throw new ApolloError("Error adding business", "ADD_BUSINESS_ERROR");
+      }
     },
 
     async addStaff(_, { businessName, name, imageFileName }) {
@@ -129,50 +147,6 @@ module.exports = resolvers;
       }
       const token = "generated-token"; // Generate a real token with your auth logic
       return { token, user };
-    },
-  },
-
-  Business: {
-    async services(parent) {
-      // Logic to fetch services based on the business
-      return parent.services;
-    },
-    async staff(parent) {
-      // Logic to fetch staff based on the business
-      return parent.staff;
-    },
-    async openingHours(parent) {
-      // Logic to fetch opening hours based on the business
-      return parent.openingHours;
-    },
-  },
-
-  Service: {
-    // Any custom resolver for Service type can go here
-  },
-
-  Customer: {
-    async bookings(parent) {
-      return await Booking.find({ customer: parent.id });
-    },
-  },
-
-  Booking: {
-    async customer(parent) {
-      return await Customer.findById(parent.customer);
-    },
-    async business(parent) {
-      return await Business.findById(parent.business);
-    },
-    async service(parent) {
-      // Assuming `service` field in booking is stored as ServiceInput
-      return parent.service;
-    },
-  },
-
-  Staff: {
-    async bookings(parent) {
-      return await Booking.find({ staffName: parent.name });
     },
   },
 };

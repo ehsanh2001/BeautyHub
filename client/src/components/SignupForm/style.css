@@ -1,0 +1,15 @@
+.card{
+    background-color:rgb(198, 250, 233);
+    margin:20px;
+
+}
+.form-input {
+    display:flex;
+    margin: 1rem; /* Adjust the value as needed */
+    width:fit-content;
+    
+  }
+  .form-input {
+    width: 90%; /* Ensures input fields fill the card's width */
+    padding: 10px; /* Optional: adds padding inside the input */
+  }

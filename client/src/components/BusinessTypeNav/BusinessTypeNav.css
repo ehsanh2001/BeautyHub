@@ -1,0 +1,32 @@
+.services-navbar {
+  background-color: transparent; /* Light background color */
+  padding: 10px;
+}
+
+.nav-list {
+  list-style: none;
+  padding:15px;
+  margin:0;
+  display: flex;
+}
+
+.nav-item {
+  margin-right: 15px;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: white; /* Link color */
+  padding: 5px 10px;
+}
+
+.nav-link.active {
+  text-decoration: underline;
+  font-weight: bold;
+  color: #0056b3; /* Active link color */
+}
+
+.nav-link:hover {
+  text-decoration: underline;
+  color: white;
+}
