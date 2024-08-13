@@ -10,6 +10,8 @@ const {
   User,
 } = require("../models");
 
+const { signToken, AuthenticationError } = require("../utils/auth");
+
 const resolvers = {
   Query: {
     // TODO: Implement the image resolver
@@ -127,10 +129,31 @@ const resolvers = {
       return await business.save();
     },
 
-    async addUser(_, { username, password, role }) {
-      const user = new User({ username, password, role });
-      const token = "generated-token"; // Generate a real token with your auth logic
-      return { token, user: await user.save() };
+    async addUser(_, { username, password, role, businessId }) {
+      if (businessId) {
+        if (!mongoose.Types.ObjectId.isValid(businessId)) {
+          throw new ApolloError("Invalid business ID", "INVALID_ID");
+        }
+        const business = await Business.findById(businessId);
+        if (!business) {
+          throw new ApolloError("Business not found", "NOT_FOUND");
+        }
+        role = "staff";
+      }
+      let user = businessId
+        ? new User({ username, password, role, businessId })
+        : new User({ username, password, role });
+
+      const token = signToken({
+        username: user.username,
+        _id: user._id,
+        role: user.role,
+        businessId: user.businessId,
+      });
+
+      user = await user.save();
+      const result = { token: token, user: user };
+      return result;
     },
 
     async login(_, { username, password }) {

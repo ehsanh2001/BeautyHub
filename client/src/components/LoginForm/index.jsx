@@ -42,8 +42,6 @@ const LoginForm = (props) => {
 
   return (
     <main className="mb-4">
-
-      
       <div className="card-body">
         {data ? (
           <p>
@@ -84,8 +82,6 @@ const LoginForm = (props) => {
       <div>
         Don't have an account? Please <Link to="/signup">Signup</Link>
       </div>
- 
-
     </main>
   );
 };

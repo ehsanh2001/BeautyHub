@@ -28,25 +28,27 @@ export const ADD_BUSINESS = gql`
   }
 `;
 export const LOGIN_USER = gql`
-mutation Login($username: String!, $password: String!) {
-  login(username: $username, password: $password) {
-    token
-    user {
-      password
-      username
+  mutation Login($username: String!, $password: String!) {
+    login(username: $username, password: $password) {
+      token
+      user {
+        password
+        username
+      }
     }
   }
-}
 `;
 export const ADD_USER = gql`
-mutation AddUser($username: String!, $password: String!, $role: String!) {
-  addUser(username: $username, password: $password, role: $role) {
-    token
-    user {
-      username
-      password
-      role
+  mutation Mutation($username: String!, $password: String!, $role: String!) {
+    addUser(username: $username, password: $password, role: $role) {
+      token
+      user {
+        id
+        username
+        role
+        businessId
+        password
+      }
     }
   }
-}
 `;

@@ -15,6 +15,11 @@ const userSchema = new Schema({
     enum: ["customer", "business-owner", "staff"],
     required: true,
   },
+  // for staff
+  businessId: {
+    type: Schema.Types.ObjectId,
+    ref: "Business",
+  },
 });
 
 userSchema.pre("save", async function (next) {
@@ -23,6 +28,10 @@ userSchema.pre("save", async function (next) {
   }
   next();
 });
+
+userSchema.methods.isCorrectPassword = async function (password) {
+  return bcrypt.compare(password, this.password);
+};
 
 const User = model("User", userSchema);
 
