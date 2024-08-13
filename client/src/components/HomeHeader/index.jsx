@@ -10,8 +10,9 @@ const HomeHeader = () => {
         <source src="./videos/horizontal_.webm" type="video/webm" />
         Your browser does not support HTML5 video.
       </video>
-      <div className="overlay"></div> {/* Dark overlay */}
+      <div className="overlay"> {/* Dark overlay */}
       <Toolbar />
+      </div>
       <div className="middle-text">
         Discover and book beauty & wellness professionals near you
       </div>
