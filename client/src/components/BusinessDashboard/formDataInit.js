@@ -22,33 +22,33 @@ const initOpeningHours = {
 };
 
 const formDataInit = {
-  businessName: "New Barber Shop",
-  businessType: "Barber Shop",
+  businessName: "",
+  businessType: "",
   services: [
-    {
-      serviceName: "Web Development",
-      price: 1500.0,
-    },
-    {
-      serviceName: "Mobile App Development",
-      price: 2000.0,
-    },
+    // {
+    //   serviceName: "Web Development",
+    //   price: 1500.0,
+    // },
+    // {
+    //   serviceName: "Mobile App Development",
+    //   price: 2000.0,
+    // },
   ],
-  address: "Some Address",
-  phone: "1234567890",
+  address: "",
+  phone: "",
   location: {
     type: "Point",
     coordinates: [-96.7969879, 32.7766642],
   },
   staff: [
-    {
-      name: "John Doe",
-      password: "SecurePass123!",
-    },
-    {
-      name: "Jane Smith",
-      password: "AnotherSecurePass456!",
-    },
+    // {
+    //   name: "John Doe",
+    //   password: "SecurePass123!",
+    // },
+    // {
+    //   name: "Jane Smith",
+    //   password: "AnotherSecurePass456!",
+    // },
   ],
   openingHours: initOpeningHours,
   image: null,

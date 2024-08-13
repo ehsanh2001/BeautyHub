@@ -2,6 +2,7 @@ import { gql } from "@apollo/client";
 
 export const ADD_BUSINESS = gql`
   mutation Mutation(
+    $owner: ID!
     $businessName: String!
     $businessType: String!
     $services: [ServiceInput!]!
@@ -13,6 +14,7 @@ export const ADD_BUSINESS = gql`
     $imageFileName: String
   ) {
     addBusiness(
+      owner: $owner
       businessName: $businessName
       businessType: $businessType
       services: $services

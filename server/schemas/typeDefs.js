@@ -5,7 +5,7 @@ const typeDefs = gql`
   # Type definitions for Booking
   type Booking {
     id: ID!
-    date: String! # GraphQL doesn't have a Date type by default
+    date: String!
     customer: Customer
     business: Business
     staffName: String!
@@ -26,6 +26,7 @@ const typeDefs = gql`
 
   # Type definitions for Business
   type Business {
+    owner: User
     id: ID!
     businessName: String!
     imageFileName: String
@@ -114,7 +115,7 @@ const typeDefs = gql`
     image(filename: String!): Image
     businesses: [Business]
     businessesByType(businessType: String!): [Business]
-    business(id: ID!): Business
+    business(userId: ID!): Business
     customer: Customer
     businessNearby(lat: Float!, lng: Float!, maxDistance: Float!): Business
   }
@@ -136,6 +137,7 @@ const typeDefs = gql`
     deleteBooking(id: ID!): Customer
 
     addBusiness(
+      owner: ID!
       businessName: String!
       businessType: String!
       services: [ServiceInput!]!

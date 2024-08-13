@@ -25,22 +25,10 @@ const ScheduleTable = ({ formData, setFormData }) => {
     "6:00 PM",
   ];
 
-  // const initialSchedule = {
-  //   Monday: new Array(timeSlots.length).fill(true),
-  //   Tuesday: new Array(timeSlots.length).fill(true),
-  //   Wednesday: new Array(timeSlots.length).fill(true),
-  //   Thursday: new Array(timeSlots.length).fill(true),
-  //   Friday: new Array(timeSlots.length).fill(true),
-  //   Saturday: new Array(timeSlots.length).fill(true),
-  //   Sunday: new Array(timeSlots.length).fill(true),
-  // };
-
-  // const [schedule, setSchedule] = useState(initialSchedule);
-
   const toggleCell = (day, index) => {
     const updatedOpeningHours = { ...formData.openingHours };
     updatedOpeningHours[day][index] = !updatedOpeningHours[day][index];
-    //setSchedule(updatedOpeningHours);
+
     setFormData((prevData) => ({
       ...prevData,
       openingHours: updatedOpeningHours,

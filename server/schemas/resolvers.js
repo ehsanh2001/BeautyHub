@@ -11,6 +11,7 @@ const {
 } = require("../models");
 
 const { signToken, AuthenticationError } = require("../utils/auth");
+const { ObjectId } = require("mongodb");
 
 const resolvers = {
   Query: {
@@ -23,15 +24,15 @@ const resolvers = {
     // },
 
     async businesses() {
-      return await Business.find();
+      return await Business.find().populate("owner");
     },
 
     async businessesByType(_, { businessType }) {
       return await Business.find({ businessType });
     },
 
-    async business(_, { id }) {
-      return await Business.findById(id);
+    async business(_, { userId }) {
+      return await Business.findOne({ owner: userId }).populate("owner");
     },
     //Business search query
     async businessNearby(_, { lat, lng, maxDistance }) {
@@ -77,6 +78,7 @@ const resolvers = {
     async addBusiness(
       _,
       {
+        owner,
         businessName,
         businessType,
         services,
@@ -90,6 +92,7 @@ const resolvers = {
     ) {
       try {
         const business = {
+          owner: owner,
           businessName: businessName,
           businessType: businessType,
           services: services,
@@ -100,8 +103,15 @@ const resolvers = {
           openingHours: openingHours,
           imageFileName: imageFileName,
         };
-
-        const result = await Business.findOneAndUpdate(business);
+        console.log("business", business);
+        const result = await Business.findOneAndUpdate(
+          { owner: owner },
+          business,
+          {
+            upsert: true,
+            new: true,
+          }
+        );
         return result;
       } catch (error) {
         console.error("Error adding business:", error);

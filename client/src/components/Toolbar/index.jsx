@@ -21,9 +21,7 @@ const Toolbar = () => {
           <>
             <Link
               className="btn nav-link m-2"
-              to={`/dashboard/${
-                Auth.getProfile().authenticatedPerson.username
-              }`}
+              to={`/dashboard/${Auth.getProfile().authenticatedPerson._id}`}
             >
               {/* Run the getProfile() method to get access to the unencrypted token value in order to retrieve the user's username  */}
               {Auth.getProfile().authenticatedPerson.username}'s Dashboard

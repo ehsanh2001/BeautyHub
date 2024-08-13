@@ -35,3 +35,41 @@ export const LOGIN_USER = gql`
     }
   }
 `;
+
+export const GET_BUSINESSE_BY_ID = gql`
+  query Business($userId: ID!) {
+    business(userId: $userId) {
+      address
+      businessName
+      id
+      businessType
+      imageFileName
+      owner {
+        id
+        role
+        username
+      }
+      phone
+      staff {
+        name
+      }
+      location {
+        type
+        coordinates
+      }
+      openingHours {
+        Monday
+        Tuesday
+        Wednesday
+        Thursday
+        Friday
+        Saturday
+        Sunday
+      }
+      services {
+        serviceName
+        price
+      }
+    }
+  }
+`;
