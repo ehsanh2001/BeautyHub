@@ -10,6 +10,7 @@ const Toolbar = () => {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const handleShowLoginModal = () => setShowLoginModal(true);
   const handleCloseLoginModal = () => setShowLoginModal(false);
+
   return (
     <nav className="toolbar px-5 ms-4 ">
       <Link to="/" className="navbar-brand">
@@ -18,7 +19,7 @@ const Toolbar = () => {
       <div className="d-flex hero">
         {Auth.loggedIn() ? (
           <>
-            <Link className="btn nav-link m-2" to="/me">
+            <Link className="btn nav-link m-2" to="/dashboard">
               {/* Run the getProfile() method to get access to the unencrypted token value in order to retrieve the user's username  */}
               {Auth.getProfile().authenticatedPerson.username}'s Dashboard
             </Link>
@@ -34,9 +35,9 @@ const Toolbar = () => {
             <Link to="/signup" className=" btn nav-link">
               Signup
             </Link>
-            <Link to="/dashboard" className="btn nav-link">
+            {/* <Link to="/dashboard" className="btn nav-link">
               Dashboard
-            </Link>
+            </Link> */}
           </>
         )}
       </div>

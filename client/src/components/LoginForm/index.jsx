@@ -2,7 +2,7 @@ import Auth from "../../utils/auth";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useMutation } from "@apollo/client";
-import { LOGIN_USER } from "../../utils/mutations";
+import { LOGIN_USER } from "../../utils/queries";
 import "./style.css";
 
 const LoginForm = (props) => {
@@ -27,8 +27,10 @@ const LoginForm = (props) => {
       const { data } = await login({
         variables: { ...formState },
       });
-
-      Auth.login(data.login.token);
+      console.log("====================================");
+      console.log(data.login.user);
+      Auth.login(data.login.token, data.login.user);
+      window.location.assign("/");
     } catch (e) {
       console.error(e);
     }

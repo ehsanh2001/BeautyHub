@@ -132,12 +132,7 @@ const resolvers = {
     async addUser(_, { username, password, role }) {
       let user = new User({ username, password, role });
 
-      const token = signToken({
-        username: user.username,
-        _id: user._id,
-        role: user.role,
-        businessId: user.businessId,
-      });
+      const token = signToken(user);
 
       user = await user.save();
       const result = { token: token, user: user };
@@ -145,12 +140,19 @@ const resolvers = {
     },
 
     async login(_, { username, password }) {
-      const user = await User.findOne({ username, password });
+      const user = await User.findOne({ username });
       if (!user) {
         throw new ApolloError("Invalid credentials", "INVALID_CREDENTIALS");
       }
-      const token = "generated-token"; // Generate a real token with your auth logic
-      return { token, user };
+
+      const correctPw = await user.isCorrectPassword(password);
+      if (!correctPw) {
+        throw new AuthenticationError("Invalid credentials");
+      }
+
+      const token = signToken(user);
+      // Generate a real token with your auth logic
+      return { token: token, user: user };
     },
   },
 };
