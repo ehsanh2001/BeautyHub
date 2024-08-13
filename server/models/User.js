@@ -15,11 +15,6 @@ const userSchema = new Schema({
     enum: ["customer", "business-owner", "staff"],
     required: true,
   },
-  // for staff
-  businessId: {
-    type: Schema.Types.ObjectId,
-    ref: "Business",
-  },
 });
 
 userSchema.pre("save", async function (next) {

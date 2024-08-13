@@ -101,7 +101,6 @@ const typeDefs = gql`
     username: String!
     role: String!
     password: String!
-    businessId: ID
   }
 
   type Auth {
@@ -158,13 +157,8 @@ const typeDefs = gql`
 
     deleteStaff(businessName: String!, staffName: String!): Business
 
-    addUser(
-      username: String!
-      password: String!
-      role: String!
-      businessId: ID
-    ): Auth
-    login(username: String!, password: String!, businessId: ID): Auth
+    addUser(username: String!, password: String!, role: String!): Auth
+    login(username: String!, password: String!): Auth
   }
 `;
 

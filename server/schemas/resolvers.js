@@ -129,20 +129,8 @@ const resolvers = {
       return await business.save();
     },
 
-    async addUser(_, { username, password, role, businessId }) {
-      if (businessId) {
-        if (!mongoose.Types.ObjectId.isValid(businessId)) {
-          throw new ApolloError("Invalid business ID", "INVALID_ID");
-        }
-        const business = await Business.findById(businessId);
-        if (!business) {
-          throw new ApolloError("Business not found", "NOT_FOUND");
-        }
-        role = "staff";
-      }
-      let user = businessId
-        ? new User({ username, password, role, businessId })
-        : new User({ username, password, role });
+    async addUser(_, { username, password, role }) {
+      let user = new User({ username, password, role });
 
       const token = signToken({
         username: user.username,

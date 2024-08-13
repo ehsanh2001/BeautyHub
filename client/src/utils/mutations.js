@@ -46,7 +46,6 @@ export const ADD_USER = gql`
         id
         username
         role
-        businessId
         password
       }
     }
