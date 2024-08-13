@@ -101,32 +101,12 @@ const resolvers = {
           imageFileName: imageFileName,
         };
 
-        const result = await Business.create(business);
+        const result = await Business.findOneAndUpdate(business);
         return result;
       } catch (error) {
         console.error("Error adding business:", error);
         throw new ApolloError("Error adding business", "ADD_BUSINESS_ERROR");
       }
-    },
-
-    async addStaff(_, { businessName, name, imageFileName }) {
-      const business = await Business.findOne({ businessName });
-      if (!business) {
-        throw new ApolloError("Business not found", "NOT_FOUND");
-      }
-      business.staff.push({ name, imageFileName });
-      return await business.save();
-    },
-
-    async deleteStaff(_, { businessName, staffName }) {
-      const business = await Business.findOne({ businessName });
-      if (!business) {
-        throw new ApolloError("Business not found", "NOT_FOUND");
-      }
-      business.staff = business.staff.filter(
-        (staff) => staff.name !== staffName
-      );
-      return await business.save();
     },
 
     async addUser(_, { username, password, role }) {

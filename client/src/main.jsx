@@ -38,7 +38,7 @@ const router = createBrowserRouter([
         element: <SearchResult />,
       },
       {
-        path: "dashboard",
+        path: "/dashboard/:userId",
         element: <Dashboard />,
       },
     ],

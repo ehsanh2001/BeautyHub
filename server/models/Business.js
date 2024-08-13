@@ -3,6 +3,11 @@ const Schema = mongoose.Schema;
 const getGFS = require("../config/gridfs");
 
 const businessSchema = new Schema({
+  owner: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
   businessName: {
     type: String,
     required: true,
@@ -66,35 +71,6 @@ const businessSchema = new Schema({
     Sunday: [Boolean],
   },
 });
-
-// Static method to save image file to GridFS
-businessSchema.statics.saveImage = async function (file) {
-  const gfs = getGFS();
-
-  if (!file) {
-    throw new Error("No file provided");
-  }
-
-  const { buffer, originalname } = file;
-
-  return new Promise((resolve, reject) => {
-    const writestream = gfs.createWriteStream({
-      filename: originalname,
-      bucketName: "uploads",
-    });
-
-    writestream.on("close", (file) => {
-      resolve(file.filename);
-    });
-
-    writestream.on("error", (err) => {
-      reject(err);
-    });
-
-    writestream.write(buffer);
-    writestream.end();
-  });
-};
 
 businessSchema.index({ location: "2dsphere" });
 

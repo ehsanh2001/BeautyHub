@@ -1,6 +1,6 @@
 import { React, useState } from "react";
 import { Link } from "react-router-dom";
-import { Button, Modal } from "react-bootstrap";
+import { Modal } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Toolbar.css"; // Custom CSS file
 import Auth from "../../utils/auth";
@@ -19,7 +19,12 @@ const Toolbar = () => {
       <div className="d-flex hero">
         {Auth.loggedIn() ? (
           <>
-            <Link className="btn nav-link m-2" to="/dashboard">
+            <Link
+              className="btn nav-link m-2"
+              to={`/dashboard/${
+                Auth.getProfile().authenticatedPerson.username
+              }`}
+            >
               {/* Run the getProfile() method to get access to the unencrypted token value in order to retrieve the user's username  */}
               {Auth.getProfile().authenticatedPerson.username}'s Dashboard
             </Link>
