@@ -15,20 +15,6 @@ const { ObjectId } = require("mongodb");
 
 const resolvers = {
   Query: {
-<<<<<<< HEAD
-    async image(_, { filename }) {
-      // Assuming you have a base URL for your CDN or image storage
-      const baseUrl = 'https://your-cdn.com/images';
-
-      // You might also include logic to check if the image exists or handle errors
-      const url = `${baseUrl}/${filename}`;
-
-      // Return the URL in a format expected by your schema
-      return { url };
-    },
-
-=======
->>>>>>> ecfa0b9a0a34ca16004065f7a931434b254b0310
     async businesses() {
       return await Business.find().populate("owner");
     },
