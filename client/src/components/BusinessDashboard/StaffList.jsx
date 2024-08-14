@@ -95,7 +95,7 @@ const StaffList = ({ formData, setFormData }) => {
         </Col>
         {/* Add Button */}
         <Col xs={1}>
-          <Button variant="success" onClick={handleAdd}>
+          <Button variant="outline-dark" onClick={handleAdd}>
             Add
           </Button>
         </Col>
@@ -111,12 +111,12 @@ const StaffList = ({ formData, setFormData }) => {
               >
                 {selStaff.name}
                 <Button
+                className="btn-close"
                   size="sm"
-                  className="mx-5"
-                  variant="danger"
+                  variant="outline-dark"
                   onClick={() => handleRemove(index)}
                 >
-                  X
+                  
                 </Button>
               </ListGroup.Item>
             ))}

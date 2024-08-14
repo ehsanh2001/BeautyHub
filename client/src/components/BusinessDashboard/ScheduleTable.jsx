@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button, Table } from "react-bootstrap";
-
+import "./style.css";
 const ScheduleTable = ({ formData, setFormData }) => {
   const weekDays = [
     "Monday",
@@ -25,22 +25,10 @@ const ScheduleTable = ({ formData, setFormData }) => {
     "6:00 PM",
   ];
 
-  // const initialSchedule = {
-  //   Monday: new Array(timeSlots.length).fill(true),
-  //   Tuesday: new Array(timeSlots.length).fill(true),
-  //   Wednesday: new Array(timeSlots.length).fill(true),
-  //   Thursday: new Array(timeSlots.length).fill(true),
-  //   Friday: new Array(timeSlots.length).fill(true),
-  //   Saturday: new Array(timeSlots.length).fill(true),
-  //   Sunday: new Array(timeSlots.length).fill(true),
-  // };
-
-  // const [schedule, setSchedule] = useState(initialSchedule);
-
   const toggleCell = (day, index) => {
     const updatedOpeningHours = { ...formData.openingHours };
     updatedOpeningHours[day][index] = !updatedOpeningHours[day][index];
-    //setSchedule(updatedOpeningHours);
+
     setFormData((prevData) => ({
       ...prevData,
       openingHours: updatedOpeningHours,
@@ -86,7 +74,7 @@ const ScheduleTable = ({ formData, setFormData }) => {
   };
 
   return (
-    <Table bordered>
+    <Table hover bordered>
       <thead>
         <tr>
           <th></th>
@@ -107,6 +95,7 @@ const ScheduleTable = ({ formData, setFormData }) => {
           <tr key={rowIndex}>
             <td>
               <Button
+                className="tabel"
                 variant={getRowHeaderVariant(day)}
                 onClick={() => toggleRow(day)}
               >
@@ -116,6 +105,7 @@ const ScheduleTable = ({ formData, setFormData }) => {
             {timeSlots.map((_, colIndex) => (
               <td key={colIndex}>
                 <Button
+                  className="tabel"
                   variant={
                     formData.openingHours[day][colIndex] ? "success" : "danger"
                   }

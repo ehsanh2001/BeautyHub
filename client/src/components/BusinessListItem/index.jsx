@@ -3,7 +3,6 @@ import { Card, ListGroup, Button, Col, Row } from "react-bootstrap";
 
 const BusinessListItem = ({ business }) => {
   const imageSrc = `http://localhost:3001/image/${business.imageFileName}`;
-  console.log("image", imageSrc);
   return (
     <Card
       className="my-4"

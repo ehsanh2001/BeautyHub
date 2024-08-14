@@ -145,7 +145,7 @@ const GoogleMapModal = ({ show, handleClose, setLocation }) => {
       </Modal.Header>
       <Modal.Body>
         <div ref={mapRef} style={{ height: "400px", width: "100%" }}></div>
-        <Button variant="info" onClick={handleCurrentLocation} className="mt-3">
+        <Button variant="outline-dark" onClick={handleCurrentLocation} className="mt-3">
           Find My Current Location
         </Button>
         <div className="mt-3">

@@ -4,7 +4,7 @@ import "./BusinessTypeNav.css"; // Import the CSS file
 
 const BusinessTypeNav = () => {
   const location = useLocation();
-  const types = ["All", "Barbershop", "Hair Salon", "Nail Salon", "Spa"];
+  const types = ["Barbershop", "Hair Salon", "Nail Salon", "Spa"];
   return (
     <nav className="services-navbar">
       <ul className="nav-list">
