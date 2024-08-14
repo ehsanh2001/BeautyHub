@@ -20,11 +20,34 @@ import { useParams } from "react-router-dom";
 import { GET_BUSINESSE_BY_ID } from "../../utils/queries.js";
 import "./BusinessDashboard.css";
 import ImageInputWithThumbnail from "./ImageInputWithThumbnail.jsx";
+import MessageModal from "./MessageModal.jsx";
 
 const BusinessDashboard = () => {
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState(formDataInit);
   const [oldImage, setOldImage] = useState(null);
+  const [invalidFields, setInvalidFields] = useState({
+    businessName: false,
+    phone: false,
+    address: false,
+    image: false,
+    businessType: false,
+  });
+
+  // Message Modal State and Functions
+  const [showMessageModal, setShowMessageModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [modalType, setModalType] = useState("success");
+
+  const handleShowMessageModal = (message, type) => {
+    setModalMessage(message);
+    setModalType(type);
+    setShowMessageModal(true);
+  };
+  const handleCloseMessageModal = () => {
+    setShowMessageModal(false);
+  };
+
   const [addBusiness] = useMutation(ADD_BUSINESS);
   const { userId } = useParams();
   const { loading, data, refetch } = useQuery(GET_BUSINESSE_BY_ID, {
@@ -78,17 +101,16 @@ const BusinessDashboard = () => {
     refetch();
   }, [refetch]);
 
+  // Handle Modal for Google Map
   const handleOpenModal = useCallback(() => setShowModal(true), []);
   const handleCloseModal = useCallback(() => setShowModal(false), []);
 
-  const handleImageChange = useCallback((e) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      image: e.target.files[0],
-    }));
-  }, []);
-
   const handleSetLocation = useCallback((location) => {
+    setInvalidFields((prevData) => ({
+      ...prevData,
+      address: false,
+    }));
+
     setFormData((prevData) => ({
       ...prevData,
       address: location.address,
@@ -101,15 +123,92 @@ const BusinessDashboard = () => {
 
   const handleFormDataChange = useCallback((e) => {
     const { name, value } = e.target;
+    setInvalidFields((prevData) => ({
+      ...prevData,
+      [name]: value ? false : true,
+    }));
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
   }, []);
 
+  // Reset invalid image field when image is changed
+  useEffect(() => {
+    setInvalidFields((prevData) => ({
+      ...prevData,
+      image: false,
+    }));
+  }, [formData.image]);
+
+  // Check General tab data validation
+  // Return true if all fields are valid
+  const checkGeneralValidation = () => {
+    console.log("formData", formData);
+    let allValid = true;
+    if (formData.businessName === "") {
+      setInvalidFields((prevData) => ({
+        ...prevData,
+        businessName: true,
+      }));
+      allValid = false;
+    }
+    if (formData.phone === "") {
+      setInvalidFields((prevData) => ({
+        ...prevData,
+        phone: true,
+      }));
+      allValid = false;
+    }
+    if (formData.address === "") {
+      setInvalidFields((prevData) => ({
+        ...prevData,
+        address: true,
+      }));
+      allValid = false;
+    }
+    if (formData.image === null && !oldImage) {
+      setInvalidFields((prevData) => ({
+        ...prevData,
+        image: true,
+      }));
+      allValid = false;
+    }
+    if (formData.businessType === "") {
+      setInvalidFields((prevData) => ({
+        ...prevData,
+        businessType: true,
+      }));
+      allValid = false;
+    }
+    return allValid;
+  };
+
+  // check service and staff validation
+  // Return true if all fields are valid
+  const checkServiceStaffValidation = () => {
+    let allValid = true;
+    if (formData.services.length === 0) {
+      allValid = false;
+      handleShowMessageModal("Please add at least one service", "error");
+    }
+    if (formData.staff.length === 0) {
+      allValid = false;
+      handleShowMessageModal("Please add at least one staff", "error");
+    }
+    return allValid;
+  };
+
   const handleSubmit = useCallback(
     async (e) => {
       e.preventDefault();
+      if (!checkGeneralValidation()) {
+        handleShowMessageModal("Please fill out all required fields", "error");
+        return;
+      }
+      if (!checkServiceStaffValidation()) {
+        return;
+      }
       try {
         // Upload image if new image added or image not exist
         let imageResult = null;
@@ -145,7 +244,7 @@ const BusinessDashboard = () => {
             imageFileName: imageFileName,
           },
         });
-        alert("Business data added successfully");
+        handleShowMessageModal("Business data added successfully", "success");
       } catch (error) {
         alert("Error adding business data");
         console.error("Error adding business data:", error);
@@ -177,7 +276,7 @@ const BusinessDashboard = () => {
     <Container fluid>
       <Form onSubmit={handleSubmit}>
         <Row>
-          <Col sm={3}>
+          <Col sm={2}>
             <Nav
               variant="pills"
               className="flex-column tab-column"
@@ -220,7 +319,11 @@ const BusinessDashboard = () => {
                       placeholder="Name"
                       value={formData.businessName}
                       onChange={handleFormDataChange}
+                      isInvalid={invalidFields.businessName}
                     />
+                    <Form.Control.Feedback type="invalid">
+                      Please provide a valid business name.
+                    </Form.Control.Feedback>
                   </Col>
                 </Form.Group>
                 {/* Business Image */}
@@ -233,16 +336,18 @@ const BusinessDashboard = () => {
                     <h6>Image:</h6>
                   </Form.Label>
                   <Col sm={9}>
-                    {/* <Form.Control
-                      type="file"
-                      placeholder="file"
-                      onChange={handleImageChange}
-                    /> */}
                     <ImageInputWithThumbnail
                       formData={formData}
                       setFormData={setFormData}
                       oldImage={oldImage}
                     />
+                    <Form.Control
+                      isInvalid={invalidFields.image}
+                      type="hidden"
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      Please provide an image.
+                    </Form.Control.Feedback>
                   </Col>
                 </Form.Group>
                 {/* Business Phone */}
@@ -257,11 +362,15 @@ const BusinessDashboard = () => {
                   <Col sm={9}>
                     <Form.Control
                       type="text"
-                      placeholder="Phone"
+                      placeholder="phone"
                       name="phone"
                       value={formData.phone}
                       onChange={handleFormDataChange}
+                      isInvalid={invalidFields.phone}
                     />
+                    <Form.Control.Feedback type="invalid">
+                      Please provide a phone number.
+                    </Form.Control.Feedback>
                   </Col>
                 </Form.Group>
                 {/* Business Address */}
@@ -282,10 +391,20 @@ const BusinessDashboard = () => {
                         <strong>Address:</strong> {formData.address}
                       </span>
                     )}
+                    <Form.Control
+                      type="hidden"
+                      name="address"
+                      isInvalid={invalidFields.address}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      Please provide a valid address.
+                    </Form.Control.Feedback>
                     <GoogleMapModal
                       show={showModal}
                       handleClose={handleCloseModal}
                       setLocation={handleSetLocation}
+                      name="address"
+                      isInvalid={invalidFields.address}
                     />
                   </Col>
                 </Form.Group>
@@ -304,6 +423,7 @@ const BusinessDashboard = () => {
                       name="businessType"
                       value={formData.businessType}
                       onChange={handleFormDataChange}
+                      isInvalid={invalidFields.businessType}
                     >
                       <option key={123456}>Select Business Type</option>
                       {businessTypes.map((type, index) => (
@@ -312,6 +432,9 @@ const BusinessDashboard = () => {
                         </option>
                       ))}
                     </Form.Select>
+                    <Form.Control.Feedback type="invalid">
+                      Please provide a business type.
+                    </Form.Control.Feedback>
                   </Col>
                 </Form.Group>
               </Tab.Pane>
@@ -372,11 +495,18 @@ const BusinessDashboard = () => {
         <Row className="mt-4">
           <Col sm={{ span: 9, offset: 3 }}>
             <Button size="lg" variant="outline-dark" type="submit">
-              Submit
+              Save
             </Button>
           </Col>
         </Row>
       </Form>
+
+      <MessageModal
+        show={showMessageModal}
+        message={modalMessage}
+        type={modalType}
+        onClose={handleCloseMessageModal}
+      />
     </Container>
   );
 };
