@@ -12,6 +12,7 @@ const BusinessDetails = () => {
   return (
     <main className="flex-row justify-center mb-4">
       <Header />
+      <h1>Search page</h1>
       <BusinessList businessType={type} />
     </main>
   );

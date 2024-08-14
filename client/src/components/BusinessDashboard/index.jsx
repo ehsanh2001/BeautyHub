@@ -10,6 +10,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import { useParams } from "react-router-dom";
 import { GET_BUSINESSE_BY_ID } from "../../utils/queries.js";
 
+
 const BusinessDashboard = () => {
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState(formDataInit);
@@ -155,11 +156,12 @@ const BusinessDashboard = () => {
   ];
 
   return (
-    <Form onSubmit={handleSubmit}>
+    <Form  className="container" onSubmit={handleSubmit}>
       {/* Business Name */}
+      <div>
       <Form.Group as={Row} className="mb-3" controlId="formBusinessName">
         <Form.Label column sm={2}>
-          Business Name
+        <h6> Business Name:</h6>
         </Form.Label>
         <Col sm={9}>
           <Form.Control
@@ -171,10 +173,11 @@ const BusinessDashboard = () => {
           />
         </Col>
       </Form.Group>
+      </div>
       {/* Business Image */}
       <Form.Group as={Row} className="mb-3" controlId="formBusinessImage">
         <Form.Label column sm={2}>
-          Image:
+        <h6>Image:</h6>
         </Form.Label>
         <Col sm={9}>
           <Form.Control
@@ -187,9 +190,9 @@ const BusinessDashboard = () => {
       {/* Business Phone */}
       <Form.Group as={Row} className="mb-3" controlId="formBusinessPhone">
         <Form.Label column sm={2}>
-          Business Phone
+        <h6>Business Phone</h6>
         </Form.Label>
-        <Col sm={9}>
+        <Col sm={6}>
           <Form.Control
             type="text"
             placeholder="Phone"
@@ -202,15 +205,15 @@ const BusinessDashboard = () => {
       {/* Business Address */}
       <Form.Group as={Row} className="mb-3" controlId="formBusinessAddress">
         <Form.Label column sm={2}>
-          Business Address
+        <h6>Business Address:</h6>
         </Form.Label>
         <Col sm={9}>
-          <Button variant="success" onClick={handleOpenModal}>
+          <Button variant="outline-dark" onClick={handleOpenModal}>
             Select Location
           </Button>
           {formData.address && (
-            <span className="mt-4 mx-3">
-              <strong>Address:</strong> {formData.address}
+            <span className="mt-4 ml-1 p-2">
+              <strong >Address:</strong> {formData.address}
             </span>
           )}
           <GoogleMapModal
@@ -223,7 +226,7 @@ const BusinessDashboard = () => {
       {/* Business Type */}
       <Form.Group as={Row} className="mb-3" controlId="formBusinessType">
         <Form.Label column sm={2}>
-          Business Type
+        <h6>Business Type:</h6>
         </Form.Label>
         <Col sm={9}>
           <Form.Select
@@ -244,20 +247,22 @@ const BusinessDashboard = () => {
       {/* Business Services */}
       <Form.Group as={Row} className="mb-3" controlId="formBusinessServices">
         <Form.Label column sm={2}>
-          Business Services
+          <h6>Business Services:</h6>
         </Form.Label>
-        <Col sm={9}>
+        <Col sm={9} >
           <SelectServices
             services={businessServices}
             formData={formData}
             setFormData={setFormData}
+            className="basic-single"
+            classNamePrefix="select"
           />
         </Col>
       </Form.Group>
       {/* Staff List */}
       <Form.Group as={Row} className="mb-3" controlId="formStaffList">
         <Form.Label column sm={2}>
-          Staff List
+        <h6>Staff List</h6>
         </Form.Label>
         <Col sm={9}>
           <StaffList formData={formData} setFormData={setFormData} />
@@ -266,14 +271,14 @@ const BusinessDashboard = () => {
       {/* Schedule Table */}
       <Form.Group as={Row} className="mb-3" controlId="formScheduleTable">
         <Form.Label column sm={2}>
-          Schedule
+        <h6> Schedule </h6>
         </Form.Label>
         <Col sm={9}>
           <ScheduleTable formData={formData} setFormData={setFormData} />
         </Col>
       </Form.Group>
       {/* Submit Button */}
-      <Button size="lg" variant="primary" type="submit">
+      <Button size="lg" variant="outline-dark" type="submit">
         Submit
       </Button>
     </Form>

@@ -14,14 +14,14 @@ const BusinessList = ({ businessType }) => {
   useEffect(() => {
     refetch(); // Refetch the data when the component mounts
   }, [refetch]);
-
+  const businesses = data?.businessesByType || [];
   return (
     <div>
       {loading ? (
         <div>Loading...</div>
       ) : (
         <div>
-          {data.businessesByType.map((business) => (
+          {businesses.map((business) => (
             <BusinessListItem key={business.id} business={business} />
           ))}
         </div>
