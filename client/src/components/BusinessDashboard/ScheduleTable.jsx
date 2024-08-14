@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button, Table } from "react-bootstrap";
-
+import "./style.css";
 const ScheduleTable = ({ formData, setFormData }) => {
   const weekDays = [
     "Monday",
@@ -86,7 +86,7 @@ const ScheduleTable = ({ formData, setFormData }) => {
   };
 
   return (
-    <Table bordered>
+    <Table hover bordered>
       <thead>
         <tr>
           <th></th>
@@ -107,6 +107,7 @@ const ScheduleTable = ({ formData, setFormData }) => {
           <tr key={rowIndex}>
             <td>
               <Button
+                className="tabel"
                 variant={getRowHeaderVariant(day)}
                 onClick={() => toggleRow(day)}
               >
@@ -116,6 +117,7 @@ const ScheduleTable = ({ formData, setFormData }) => {
             {timeSlots.map((_, colIndex) => (
               <td key={colIndex}>
                 <Button
+                  className="tabel"
                   variant={
                     formData.openingHours[day][colIndex] ? "success" : "danger"
                   }

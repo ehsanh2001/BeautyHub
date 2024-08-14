@@ -70,7 +70,7 @@ const SelectServices = ({ services, formData, setFormData }) => {
 
             <Dropdown.Toggle
               split
-              variant="success"
+              variant="outline-dark"
               id="dropdown-split-basic"
             />
 
@@ -94,7 +94,7 @@ const SelectServices = ({ services, formData, setFormData }) => {
           />
         </Col>
         <Col>
-          <Button variant="success" onClick={handleAdd}>
+          <Button variant="outline-dark" onClick={handleAdd}>
             Add
           </Button>
         </Col>
@@ -110,11 +110,12 @@ const SelectServices = ({ services, formData, setFormData }) => {
               >
                 {service.serviceName} ${service.price}
                 <Button
-                  variant="danger"
+                  variant="outline-dark"
                   size="sm"
                   onClick={() => handleRemove(index)}
+                  className="btn-close"
                 >
-                  X
+                  
                 </Button>
               </ListGroup.Item>
             ))}

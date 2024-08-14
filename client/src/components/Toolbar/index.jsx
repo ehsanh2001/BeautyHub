@@ -24,7 +24,7 @@ const Toolbar = () => {
                 {Auth.getProfile().authenticatedPerson.username}'s profile
               </Link>
               <button
-                className="btn btn-lg btn-light m-2"
+                className="nav-link"
                 onClick={Auth.logout}
               >
                 Logout
