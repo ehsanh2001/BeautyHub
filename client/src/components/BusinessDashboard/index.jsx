@@ -18,10 +18,13 @@ import { ADD_BUSINESS } from "../../utils/mutations.js";
 import { useMutation, useQuery } from "@apollo/client";
 import { useParams } from "react-router-dom";
 import { GET_BUSINESSE_BY_ID } from "../../utils/queries.js";
+import "./BusinessDashboard.css";
+import ImageInputWithThumbnail from "./ImageInputWithThumbnail.jsx";
 
 const BusinessDashboard = () => {
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState(formDataInit);
+  const [oldImage, setOldImage] = useState(null);
   const [addBusiness] = useMutation(ADD_BUSINESS);
   const { userId } = useParams();
   const { loading, data, refetch } = useQuery(GET_BUSINESSE_BY_ID, {
@@ -32,6 +35,7 @@ const BusinessDashboard = () => {
   // get data from server
   useEffect(() => {
     if (data && data.business) {
+      setOldImage(data.business.imageFileName);
       for (let day in formDataInit.openingHours) {
         for (let i = 0; i < data.business.openingHours[day].length; i++) {
           formDataInit.openingHours[day][i] =
@@ -113,7 +117,7 @@ const BusinessDashboard = () => {
           const formDataFile = new FormData();
           formDataFile.append("file", formData.image);
 
-          const response = await fetch("http://localhost:3001/upload", {
+          const response = await fetch("/api/upload", {
             method: "POST",
             body: formDataFile,
           });
@@ -125,6 +129,7 @@ const BusinessDashboard = () => {
         if (imageFileName === "0" && data && data.business) {
           imageFileName = data.business.imageFileName;
         }
+        console.log("imageFileName", imageFileName);
         // Add business data
         const result = await addBusiness({
           variables: {
@@ -228,10 +233,15 @@ const BusinessDashboard = () => {
                     <h6>Image:</h6>
                   </Form.Label>
                   <Col sm={9}>
-                    <Form.Control
+                    {/* <Form.Control
                       type="file"
                       placeholder="file"
                       onChange={handleImageChange}
+                    /> */}
+                    <ImageInputWithThumbnail
+                      formData={formData}
+                      setFormData={setFormData}
+                      oldImage={oldImage}
                     />
                   </Col>
                 </Form.Group>

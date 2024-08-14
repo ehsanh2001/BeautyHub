@@ -2,13 +2,13 @@ import React from "react";
 import { Card, ListGroup, Button, Col, Row } from "react-bootstrap";
 
 const BusinessListItem = ({ business }) => {
-  const imageSrc = `http://localhost:3001/image/${business.imageFileName}`;
+  const imageSrc = `/api/image/${business.imageFileName}`;
   return (
     <Card
       className="my-4"
       style={{ width: "100%", height: "auto", margin: "10px" }}
     >
-      <Row nogutters>
+      <Row>
         <Col md={4}>
           <Card.Img
             variant="top"
