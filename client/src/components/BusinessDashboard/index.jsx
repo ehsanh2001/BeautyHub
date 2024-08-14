@@ -18,6 +18,7 @@ import { ADD_BUSINESS } from "../../utils/mutations.js";
 import { useMutation, useQuery } from "@apollo/client";
 import { useParams } from "react-router-dom";
 import { GET_BUSINESSE_BY_ID } from "../../utils/queries.js";
+import "./BusinessDashboard.css";
 
 const BusinessDashboard = () => {
   const [showModal, setShowModal] = useState(false);
@@ -113,7 +114,7 @@ const BusinessDashboard = () => {
           const formDataFile = new FormData();
           formDataFile.append("file", formData.image);
 
-          const response = await fetch("http://localhost:3001/upload", {
+          const response = await fetch("/api/upload", {
             method: "POST",
             body: formDataFile,
           });

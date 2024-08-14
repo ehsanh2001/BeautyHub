@@ -30,7 +30,7 @@ const startApolloServer = async () => {
 
   app.use(express.urlencoded({ extended: false }));
   app.use(express.json());
-  app.use(uploadApi);
+  app.use("/api", uploadApi);
 
   app.use(
     "/graphql",
