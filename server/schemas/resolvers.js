@@ -98,7 +98,6 @@ const resolvers = {
           openingHours: openingHours,
           imageFileName: imageFileName,
         };
-        console.log("business", business);
         const result = await Business.findOneAndUpdate(
           { owner: owner },
           business,
