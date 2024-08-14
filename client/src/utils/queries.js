@@ -73,3 +73,30 @@ export const GET_BUSINESSE_BY_ID = gql`
     }
   }
 `;
+
+export const GET_BUSINESSES_BY_TYPE = gql`
+  query BusinessesByType($businessType: String!) {
+    businessesByType(businessType: $businessType) {
+      address
+      businessName
+      businessType
+      id
+      imageFileName
+      location {
+        coordinates
+        type
+      }
+      phone
+      services {
+        serviceName
+        price
+      }
+      staff {
+        name
+      }
+      owner {
+        id
+      }
+    }
+  }
+`;

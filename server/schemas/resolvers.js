@@ -15,20 +15,15 @@ const { ObjectId } = require("mongodb");
 
 const resolvers = {
   Query: {
-    // TODO: Implement the image resolver
-
-    // async image(_, { filename }) {
-    //   // Logic to fetch the image by filename
-    //   // Assuming you have a method to fetch image URL
-    //   return { url: `https://your-cdn.com/images/${filename}` };
-    // },
-
     async businesses() {
       return await Business.find().populate("owner");
     },
 
     async businessesByType(_, { businessType }) {
-      return await Business.find({ businessType });
+      if (!businessType || businessType === "all") {
+        return await Business.find().populate("owner");
+      }
+      return await Business.find({ businessType }).populate("owner");
     },
 
     async business(_, { userId }) {
