@@ -24,6 +24,7 @@ import ImageInputWithThumbnail from "./ImageInputWithThumbnail.jsx";
 const BusinessDashboard = () => {
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState(formDataInit);
+  const [oldImage, setOldImage] = useState(null);
   const [addBusiness] = useMutation(ADD_BUSINESS);
   const { userId } = useParams();
   const { loading, data, refetch } = useQuery(GET_BUSINESSE_BY_ID, {
@@ -34,6 +35,7 @@ const BusinessDashboard = () => {
   // get data from server
   useEffect(() => {
     if (data && data.business) {
+      setOldImage(data.business.imageFileName);
       for (let day in formDataInit.openingHours) {
         for (let i = 0; i < data.business.openingHours[day].length; i++) {
           formDataInit.openingHours[day][i] =
@@ -60,7 +62,6 @@ const BusinessDashboard = () => {
         businessName: businessData.businessName,
         phone: businessData.phone,
         address: businessData.address,
-        image: businessData.imageFileName,
         location: {
           type: "Point",
           coordinates: businessData.location.coordinates,
@@ -128,6 +129,7 @@ const BusinessDashboard = () => {
         if (imageFileName === "0" && data && data.business) {
           imageFileName = data.business.imageFileName;
         }
+        console.log("imageFileName", imageFileName);
         // Add business data
         const result = await addBusiness({
           variables: {
@@ -239,6 +241,7 @@ const BusinessDashboard = () => {
                     <ImageInputWithThumbnail
                       formData={formData}
                       setFormData={setFormData}
+                      oldImage={oldImage}
                     />
                   </Col>
                 </Form.Group>

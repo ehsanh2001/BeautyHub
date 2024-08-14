@@ -8,7 +8,7 @@ const BusinessListItem = ({ business }) => {
       className="my-4"
       style={{ width: "100%", height: "auto", margin: "10px" }}
     >
-      <Row nogutters>
+      <Row>
         <Col md={4}>
           <Card.Img
             variant="top"

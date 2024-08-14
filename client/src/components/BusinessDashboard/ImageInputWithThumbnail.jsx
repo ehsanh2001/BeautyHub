@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Form } from "react-bootstrap";
 
-const ImageInputWithThumbnail = ({ formData, setFormData }) => {
+const ImageInputWithThumbnail = ({ formData, setFormData, oldImage }) => {
   const [imageSrc, setImageSrc] = useState(null);
   const [prevImage, setPrevImage] = useState(null);
 
   useEffect(() => {
-    console.log("prevImage", formData);
-    if (formData.image) {
-      console.log("prevImage", formData.image);
-      setPrevImage(`/api/image/${formData.image}`);
+    console.log("Old Image: ", oldImage);
+    if (oldImage) {
+      setPrevImage(`/api/image/${oldImage}`);
     }
   }, [formData]);
 
