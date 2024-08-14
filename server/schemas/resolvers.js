@@ -10,26 +10,24 @@ const {
   User,
 } = require("../models");
 
+const { signToken, AuthenticationError } = require("../utils/auth");
+const { ObjectId } = require("mongodb");
+
 const resolvers = {
   Query: {
-    // TODO: Implement the image resolver
-
-    // async image(_, { filename }) {
-    //   // Logic to fetch the image by filename
-    //   // Assuming you have a method to fetch image URL
-    //   return { url: `https://your-cdn.com/images/${filename}` };
-    // },
-
     async businesses() {
-      return await Business.find();
+      return await Business.find().populate("owner");
     },
 
     async businessesByType(_, { businessType }) {
-      return await Business.find({ businessType });
+      if (!businessType || businessType === "all") {
+        return await Business.find().populate("owner");
+      }
+      return await Business.find({ businessType }).populate("owner");
     },
 
-    async business(_, { id }) {
-      return await Business.findById(id);
+    async business(_, { userId }) {
+      return await Business.findOne({ owner: userId }).populate("owner");
     },
     //Business search query
     async businessNearby(_, { lat, lng, maxDistance }) {
@@ -75,6 +73,7 @@ const resolvers = {
     async addBusiness(
       _,
       {
+        owner,
         businessName,
         businessType,
         services,
@@ -88,6 +87,7 @@ const resolvers = {
     ) {
       try {
         const business = {
+          owner: owner,
           businessName: businessName,
           businessType: businessType,
           services: services,
@@ -98,8 +98,14 @@ const resolvers = {
           openingHours: openingHours,
           imageFileName: imageFileName,
         };
-
-        const result = await Business.create(business);
+        const result = await Business.findOneAndUpdate(
+          { owner: owner },
+          business,
+          {
+            upsert: true,
+            new: true,
+          }
+        );
         return result;
       } catch (error) {
         console.error("Error adding business:", error);
@@ -107,39 +113,30 @@ const resolvers = {
       }
     },
 
-    async addStaff(_, { businessName, name, imageFileName }) {
-      const business = await Business.findOne({ businessName });
-      if (!business) {
-        throw new ApolloError("Business not found", "NOT_FOUND");
-      }
-      business.staff.push({ name, imageFileName });
-      return await business.save();
-    },
-
-    async deleteStaff(_, { businessName, staffName }) {
-      const business = await Business.findOne({ businessName });
-      if (!business) {
-        throw new ApolloError("Business not found", "NOT_FOUND");
-      }
-      business.staff = business.staff.filter(
-        (staff) => staff.name !== staffName
-      );
-      return await business.save();
-    },
-
     async addUser(_, { username, password, role }) {
-      const user = new User({ username, password, role });
-      const token = "generated-token"; // Generate a real token with your auth logic
-      return { token, user: await user.save() };
+      let user = new User({ username, password, role });
+
+      const token = signToken(user);
+
+      user = await user.save();
+      const result = { token: token, user: user };
+      return result;
     },
 
     async login(_, { username, password }) {
-      const user = await User.findOne({ username, password });
+      const user = await User.findOne({ username });
       if (!user) {
         throw new ApolloError("Invalid credentials", "INVALID_CREDENTIALS");
       }
-      const token = "generated-token"; // Generate a real token with your auth logic
-      return { token, user };
+
+      const correctPw = await user.isCorrectPassword(password);
+      if (!correctPw) {
+        throw new AuthenticationError("Invalid credentials");
+      }
+
+      const token = signToken(user);
+      // Generate a real token with your auth logic
+      return { token: token, user: user };
     },
   },
 };

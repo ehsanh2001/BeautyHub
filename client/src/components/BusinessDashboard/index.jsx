@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { Form, Row, Col, Button } from "react-bootstrap";
 import GoogleMapModal from "./GoogleMapModal";
 import SelectServices from "./SelectServices";
@@ -6,13 +6,60 @@ import StaffList from "./StaffList";
 import ScheduleTable from "./ScheduleTable.jsx";
 import formDataInit from "./formDataInit.js";
 import { ADD_BUSINESS } from "../../utils/mutations.js";
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
+import { useParams } from "react-router-dom";
+import { GET_BUSINESSE_BY_ID } from "../../utils/queries.js";
 
 
 const BusinessDashboard = () => {
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState(formDataInit);
   const [addBusiness] = useMutation(ADD_BUSINESS);
+  const { userId } = useParams();
+  const { loading, data } = useQuery(GET_BUSINESSE_BY_ID, {
+    variables: { userId: userId },
+  });
+
+  // get data from server
+  useEffect(() => {
+    if (data && data.business) {
+      for (let day in formDataInit.openingHours) {
+        for (let i = 0; i < data.business.openingHours[day].length; i++) {
+          formDataInit.openingHours[day][i] =
+            data.business.openingHours[day][i];
+        }
+      }
+      const staff = data.business.staff.map((staff) => {
+        return {
+          name: staff.name,
+          password: "",
+        };
+      });
+
+      const services = data.business.services.map((service) => {
+        return {
+          serviceName: service.serviceName,
+          price: service.price,
+        };
+      });
+
+      const businessData = data.business;
+      setFormData((prevData) => ({
+        ...prevData,
+        businessName: businessData.businessName,
+        phone: businessData.phone,
+        address: businessData.address,
+        location: {
+          type: "Point",
+          coordinates: businessData.location.coordinates,
+        },
+        businessType: businessData.businessType,
+        services: services,
+        staff: staff,
+        openingHours: formDataInit.openingHours,
+      }));
+    }
+  }, [data]);
 
   const handleOpenModal = useCallback(() => setShowModal(true), []);
   const handleCloseModal = useCallback(() => setShowModal(false), []);
@@ -47,37 +94,40 @@ const BusinessDashboard = () => {
     async (e) => {
       e.preventDefault();
       try {
-        // Upload image
-        const formDataFile = new FormData();
-        formDataFile.append("file", formData.image);
-        console.log("Start uploading file");
-        try {
+        // Upload image if new image added or image not exist
+        let imageResult = null;
+        if (formData.image) {
+          const formDataFile = new FormData();
+          formDataFile.append("file", formData.image);
+
           const response = await fetch("http://localhost:3001/upload", {
             method: "POST",
             body: formDataFile,
           });
-          const imageResult = await response.json();
-          const imageFileName = imageResult.file.filename;
-
-          // Add business data
-          const result = await addBusiness({
-            variables: {
-              businessName: formData.businessName,
-              businessType: formData.businessType,
-              services: formData.services,
-              address: formData.address,
-              phone: formData.phone,
-              location: formData.location,
-              staff: formData.staff,
-              openingHours: formData.openingHours,
-              imageFileName: imageFileName,
-            },
-          });
-          alert("Business data added successfully");
-        } catch (error) {
-          alert("Error uploading files:", error);
-          console.log("Error uploading files:", error);
+          imageResult = await response.json();
         }
+
+        // Get image file name
+        let imageFileName = imageResult ? imageResult.file.filename : "0";
+        if (imageFileName === "0" && data && data.business) {
+          imageFileName = data.business.imageFileName;
+        }
+        // Add business data
+        const result = await addBusiness({
+          variables: {
+            owner: userId,
+            businessName: formData.businessName,
+            businessType: formData.businessType,
+            services: formData.services,
+            address: formData.address,
+            phone: formData.phone,
+            location: formData.location,
+            staff: formData.staff,
+            openingHours: formData.openingHours,
+            imageFileName: imageFileName,
+          },
+        });
+        alert("Business data added successfully");
       } catch (error) {
         alert("Error adding business data");
         console.error("Error adding business data:", error);
@@ -187,7 +237,9 @@ const BusinessDashboard = () => {
           >
             <option key={123456}>Select Business Type</option>
             {businessTypes.map((type, index) => (
-              <option key={index}>{type}</option>
+              <option key={index} value={type}>
+                {type}
+              </option>
             ))}
           </Form.Select>
         </Col>

@@ -2,6 +2,7 @@ import { gql } from "@apollo/client";
 
 export const ADD_BUSINESS = gql`
   mutation Mutation(
+    $owner: ID!
     $businessName: String!
     $businessType: String!
     $services: [ServiceInput!]!
@@ -13,6 +14,7 @@ export const ADD_BUSINESS = gql`
     $imageFileName: String
   ) {
     addBusiness(
+      owner: $owner
       businessName: $businessName
       businessType: $businessType
       services: $services
@@ -27,26 +29,17 @@ export const ADD_BUSINESS = gql`
     }
   }
 `;
-export const LOGIN_USER = gql`
-mutation Login($username: String!, $password: String!) {
-  login(username: $username, password: $password) {
-    token
-    user {
-      password
-      username
-    }
-  }
-}
-`;
+
 export const ADD_USER = gql`
-mutation AddUser($username: String!, $password: String!, $role: String!) {
-  addUser(username: $username, password: $password, role: $role) {
-    token
-    user {
-      username
-      password
-      role
+  mutation Mutation($username: String!, $password: String!, $role: String!) {
+    addUser(username: $username, password: $password, role: $role) {
+      token
+      user {
+        id
+        username
+        role
+        password
+      }
     }
   }
-}
 `;
