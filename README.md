@@ -3,17 +3,17 @@
 ## Description
 
 A web application for booking cosmetic services, where business owners can manage their offerings and schedules, and users can find, book, and review services seamlessly.
-Our inspiration for this website was to make a website where people can find all of their beauty and cosmetic needs in one place while being able to compare businesses and make appointments with hair stylists, nail techs, makeup artists and more. We built this project as a way to make life easier for those seeking out new places and stylists and find whats easier/cheapest without having to look up everything and everywhere individually.
-BeautyHub makes everything incredibly easier for anyone looking to have everything they need, beauty-wise, all in one place, it's very convenient being able to compare stylists, businesses, reviews and prices all at once withoout having to visit every inidividual store's pages to see.
+
+Our motivation for this project was to create a space for anybody looking for beauty/cosmetic services. We built this project with the hope of making everyones lives easier when seeking out business to get their nails, hair, makeup etc done. Our hope for the project was to solve peoples issue of having to put in the extra steps to see business, stylists, reviews and prices without having to go look at every stores individual page and compare, It's all laid out for you in one convenient space.
+## Table of Contents (Optional)
 
 
 ## Installation
 
-open integrated terminal and paste
--npm install
-to run locally paste 
--npm run develop
-for deployed page please see the bottom of README file.
+open integrated terminal 
+paste -npm install
+paste -npm run develop to run the page locally
+for a deployed application please see the deployed link at the bottom of the page
 
 ## Usage
 
@@ -22,14 +22,12 @@ Provide instructions and examples for use. Include screenshots as needed.
 
 ## Credits
 
-Collaborators:
-Ehsan Hosseini https://github.com/ehsanh2001
+Collaborator:
+Ehsan Hosesseini https://github.com/ehsanh2001
 Jaqueline Farias de Souza Esteves https://github.com/jaquelineesteves
 Ryan Cuthbert https://github.com/Ryan3389
 Justin Morris https://github.com/Jmorris38
 Alexis Brown-Renshaw https://github.com/KatLeviathan
 
 
-## Link
-
-You can see the deployed app [here](https://beautyhub.onrender.com)
+You can see the deployed app here https://beautyhub.onrender.com/
