@@ -19,6 +19,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import { useParams } from "react-router-dom";
 import { GET_BUSINESSE_BY_ID } from "../../utils/queries.js";
 import "./BusinessDashboard.css";
+import ImageInputWithThumbnail from "./ImageInputWithThumbnail.jsx";
 
 const BusinessDashboard = () => {
   const [showModal, setShowModal] = useState(false);
@@ -59,6 +60,7 @@ const BusinessDashboard = () => {
         businessName: businessData.businessName,
         phone: businessData.phone,
         address: businessData.address,
+        image: businessData.imageFileName,
         location: {
           type: "Point",
           coordinates: businessData.location.coordinates,
@@ -229,10 +231,14 @@ const BusinessDashboard = () => {
                     <h6>Image:</h6>
                   </Form.Label>
                   <Col sm={9}>
-                    <Form.Control
+                    {/* <Form.Control
                       type="file"
                       placeholder="file"
                       onChange={handleImageChange}
+                    /> */}
+                    <ImageInputWithThumbnail
+                      formData={formData}
+                      setFormData={setFormData}
                     />
                   </Col>
                 </Form.Group>
