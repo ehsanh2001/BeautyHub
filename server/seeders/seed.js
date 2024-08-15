@@ -1,3 +1,4 @@
+import pic from "../assets/images/alexa.png"
 const db = require("../config/connection");
 const { Business, Customer, Booking, User } = require("../models"); // Adjust imports according to your project structure
 
@@ -35,7 +36,7 @@ db.once("open", async () => {
         address: "123 Main St, Hometown",
         phone: "555-555-5555",
         location: { type: "Point", coordinates: [-80.1917902, 25.7616798] },
-        staff: [{ name: "Sarah Lee", imageFileName: "sarah.png" }],
+        staff: [{ name: "Sarah Lee", imageFileName: pic }],
         openingHours: {
           Monday: [false, true, true, true, true, true, false],
           Tuesday: [false, true, true, true, true, true, false],
@@ -49,7 +50,7 @@ db.once("open", async () => {
       },
     ]);
 
-    
+
     console.log("Sample data seeded successfully!");
   } catch (err) {
     console.error(err);
