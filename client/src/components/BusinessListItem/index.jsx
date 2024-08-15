@@ -7,7 +7,11 @@ const BusinessListItem = ({ business }) => {
   return (
     <Card
       className="my-4"
-      style={{ width: "100%", height: "auto", margin: "10px" }}
+      style={{
+        width: "100%",
+        height: "auto",
+        margin: "10px",
+      }}
     >
       <Row>
         <Col md={4}>
@@ -19,7 +23,14 @@ const BusinessListItem = ({ business }) => {
         </Col>
         <Col md={8}>
           <Card.Body>
-            <Card.Title>{business.businessName}</Card.Title>
+            <Card.Title>
+              <Link
+                to={`/business_details/${business.id}`}
+                state={{ business: business }}
+              >
+                {business.businessName}
+              </Link>
+            </Card.Title>
             <Card.Text>({business.businessType})</Card.Text>
             <Card.Text>{business.address}</Card.Text>
             <ListGroup variant="flush">
