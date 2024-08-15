@@ -253,16 +253,13 @@ const BusinessDashboard = () => {
     [formData]
   );
 
-  const businessTypes = [
-    "Barbershop",
-    "Hair Salon",
-    "Nail Salon",
-    "Skin Care",
-    "Spa",
-  ];
+  const businessTypes = ["Barbershop", "Hair Salon", "Nail Salon", "Spa"];
 
   const businessServices = [
     "Haircut",
+    "Beard Trim",
+    "Shave",
+    "Buzz Cut",
     "Hair Color",
     "Hair Styling",
     "Hair Treatment",

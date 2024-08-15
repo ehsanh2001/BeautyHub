@@ -13,7 +13,7 @@ const Footer = () => {
             &larr; Go Back
           </button>
         )}
-        <h5>Coding Bootcamp UofT SCS</h5>
+        <h5>2024 Coding Bootcamp UofT SCS</h5>
       </div>
     </footer>
   );

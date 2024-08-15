@@ -46,9 +46,10 @@ const Business = ({ business }) => {
                   <span>{service.serviceName}</span>
                   <span>
                     ${service.price}{" "}
-                    <Button variant="primary" size="sm">
+                    {/* Show the button when the booking functioanluty is added */}
+                    {/* <Button variant="primary" size="sm">
                       Book
-                    </Button>
+                    </Button> */}
                   </span>
                 </ListGroup.Item>
               ))}
