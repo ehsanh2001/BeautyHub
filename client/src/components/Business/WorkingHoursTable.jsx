@@ -2,6 +2,7 @@ import React from "react";
 import { Table } from "react-bootstrap";
 
 const WorkingHoursTable = ({ weekData }) => {
+  console.log("Data=", weekData);
   const daysOfWeek = [
     "Sunday",
     "Monday",
@@ -12,15 +13,15 @@ const WorkingHoursTable = ({ weekData }) => {
     "Saturday",
   ];
   const hoursOfDay = Array.from(
-    { length: 9 },
-    (_, i) => `${i + 9} AM - ${i + 10} AM`
+    { length: weekData.Sunday.length },
+    (_, i) => `${i + 9}:00  `
   );
 
   return (
     <Table bordered>
       <thead>
         <tr>
-          <th>#</th>
+          <th></th>
           {hoursOfDay.map((hour, index) => (
             <th key={index}>{hour}</th>
           ))}

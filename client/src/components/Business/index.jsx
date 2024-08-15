@@ -8,7 +8,7 @@ const Business = ({ business }) => {
     <Card
       className="my-4"
       style={{
-        width: "70%",
+        width: "90%",
         height: "auto",
         marginLeft: "auto",
         marginRight: "auto",
@@ -68,9 +68,12 @@ const Business = ({ business }) => {
             </ListGroup>
           </Card.Body>
         </Col>
-      </Row>
-      <Row>
-        <WorkingHoursTable weekData={business.workingHours} />
+        <Col md={{ span: 8, offset: 2 }}>
+          <Card.Text>
+            <strong>Openning Hours </strong>
+          </Card.Text>
+          <WorkingHoursTable weekData={business.openingHours} />
+        </Col>
       </Row>
     </Card>
   );

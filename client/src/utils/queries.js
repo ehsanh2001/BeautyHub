@@ -75,27 +75,37 @@ export const GET_BUSINESSE_BY_ID = gql`
 `;
 
 export const GET_BUSINESSES_BY_TYPE = gql`
-  query BusinessesByType($businessType: String!) {
+  query Query($businessType: String!) {
     businessesByType(businessType: $businessType) {
-      address
-      businessName
-      businessType
       id
+      businessName
       imageFileName
-      location {
-        coordinates
-        type
-      }
+      businessType
+      address
       phone
+      owner {
+        id
+      }
       services {
         serviceName
         price
       }
+      location {
+        type
+        coordinates
+      }
       staff {
+        imageFileName
         name
       }
-      owner {
-        id
+      openingHours {
+        Monday
+        Tuesday
+        Wednesday
+        Thursday
+        Friday
+        Saturday
+        Sunday
       }
     }
   }
