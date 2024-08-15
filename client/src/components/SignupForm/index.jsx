@@ -9,7 +9,7 @@ const SignupForm = () => {
   const [formState, setFormState] = useState({
     username: "",
     password: "",
-    role: "",
+    role: "business-owner",
   });
   const [addUser, { error, data }] = useMutation(ADD_USER);
 
@@ -66,7 +66,7 @@ const SignupForm = () => {
                     value={formState.password}
                     onChange={handleChange}
                   />
-                  <select
+                  {/* <select
                     className="form-input rounded"
                     name="role"
                     value={formState.role}
@@ -77,7 +77,7 @@ const SignupForm = () => {
                     </option>
                     <option value="customer">Customer</option>
                     <option value="business-owner">Business Owner</option>
-                  </select>
+                  </select> */}
                   <button
                     className="btn btn-block bg-dark btn-primary"
                     style={{ cursor: "pointer" }}
