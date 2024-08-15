@@ -6,6 +6,7 @@ import Auth from "../utils/auth";
 
 const BusinessDetails = () => {
   const { id } = useParams();
+  console.log(id);
   // get the business data from the API
   const businessData = {
     name: "Business Name",

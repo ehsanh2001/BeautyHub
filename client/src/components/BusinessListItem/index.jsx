@@ -1,5 +1,6 @@
 import React from "react";
 import { Card, ListGroup, Button, Col, Row } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 const BusinessListItem = ({ business }) => {
   const imageSrc = `/api/image/${business.imageFileName}`;
