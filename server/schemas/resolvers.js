@@ -45,10 +45,6 @@ const resolvers = {
     },
   },
 
-
-module.exports = resolvers;
-
-
   Mutation: {
     async addCustomer(_, { name, phone }) {
       const customer = new Customer({ name, phone });
