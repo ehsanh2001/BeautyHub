@@ -110,3 +110,40 @@ export const GET_BUSINESSES_BY_TYPE = gql`
     }
   }
 `;
+
+export const SEARCH_BUSINESSES = gql`
+  query SearchBusinessesBySeriveOrName($searchTerm: String!) {
+    searchBusinessesBySeriveOrName(searchTerm: $searchTerm) {
+      businessName
+      address
+      businessType
+      id
+      imageFileName
+      location {
+        type
+        coordinates
+      }
+      openingHours {
+        Monday
+        Tuesday
+        Wednesday
+        Thursday
+        Friday
+        Saturday
+        Sunday
+      }
+      phone
+      services {
+        serviceName
+        price
+      }
+      staff {
+        imageFileName
+        name
+      }
+      owner {
+        id
+      }
+    }
+  }
+`;

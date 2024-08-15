@@ -14,6 +14,7 @@ const BusinessList = ({ businessType }) => {
   useEffect(() => {
     refetch(); // Refetch the data when the component mounts
   }, [refetch]);
+
   const businesses = data?.businessesByType || [];
   return (
     <div>

@@ -34,7 +34,7 @@ const router = createBrowserRouter([
         element: <BusinessDetails />,
       },
       {
-        path: "/search/:type",
+        path: "/search/:query",
         element: <SearchResult />,
       },
       {

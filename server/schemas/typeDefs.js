@@ -118,6 +118,7 @@ const typeDefs = gql`
     business(userId: ID!): Business
     customer: Customer
     businessNearby(lat: Float!, lng: Float!, maxDistance: Float!): Business
+    searchBusinessesBySeriveOrName(searchTerm: String!): [Business]
   }
 
   # -----------------------------------------------

@@ -40,6 +40,15 @@ const resolvers = {
       });
     },
 
+    async searchBusinessesBySeriveOrName(_, { searchTerm }) {
+      return await Business.find({
+        $or: [
+          { businessName: { $regex: searchTerm, $options: "i" } },
+          { "services.serviceName": { $regex: searchTerm, $options: "i" } },
+        ],
+      }).populate("owner");
+    },
+
     async customer(_, { id }) {
       return await Customer.findById(id);
     },
